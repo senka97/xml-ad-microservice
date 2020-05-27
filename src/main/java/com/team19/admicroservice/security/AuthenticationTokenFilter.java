@@ -24,9 +24,9 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
         String permissions = httpRequest.getHeader("permissions");
         String userID = httpRequest.getHeader("userID");
         String token = httpRequest.getHeader("Authorization");
-        System.out.println(permissions);
-        System.out.println(userID);
-        System.out.println(token);
+        //System.out.println(permissions);
+        //System.out.println(userID);
+        //System.out.println(token);
 
         //U slucaju da je neko prosledio zahtev sa permisijama ali bez tokena
         //sto znaci da nije ulogovan, pa samim tim ne bi trebao da ima ni permisije
@@ -36,7 +36,7 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
 
             String[] perms = permissions.split("\\|");
             for (String perm : perms) {
-                System.out.println(perm);
+                //System.out.println(perm);
                 authorities.add(new SimpleGrantedAuthority(perm));
             }
 

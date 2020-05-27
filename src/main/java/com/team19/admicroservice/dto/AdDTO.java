@@ -1,38 +1,26 @@
-package com.team19.admicroservice.model;
+package com.team19.admicroservice.dto;
 
-import javax.persistence.*;
 import java.time.LocalDate;
 
-@Entity
-public class Ad {
+public class AdDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name="startDate")
     private LocalDate startDate;
 
-    @Column(name="endDate")
     private LocalDate endDate;
 
-    @Column(name="limitKm")
     private int limitKm;
 
-    @Column(name="cdw")
     private boolean cdw;
 
-    @Column(name="location")
     private String location;
 
-    @Column(name="carId")
-    private Long carId;
+    private PriceListDTO priceList;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private PriceList priceList;
+    private CarDTO car;
 
-    public Ad()
-    {
+    public AdDTO(){
 
     }
 
@@ -68,7 +56,7 @@ public class Ad {
         this.limitKm = limitKm;
     }
 
-    public boolean getCdw() {
+    public boolean isCdw() {
         return cdw;
     }
 
@@ -84,19 +72,19 @@ public class Ad {
         this.location = location;
     }
 
-    public Long getCarId() {
-        return carId;
-    }
-
-    public void setCarId(Long carId) {
-        this.carId = carId;
-    }
-
-    public PriceList getPriceList() {
+    public PriceListDTO getPriceList() {
         return priceList;
     }
 
-    public void setPriceList(PriceList priceList) {
+    public void setPriceList(PriceListDTO priceList) {
         this.priceList = priceList;
+    }
+
+    public CarDTO getCar() {
+        return car;
+    }
+
+    public void setCar(CarDTO car) {
+        this.car = car;
     }
 }

@@ -2,6 +2,7 @@ package com.team19.admicroservice.service.impl;
 
 import com.team19.admicroservice.client.CarClient;
 import com.team19.admicroservice.dto.AdDTO;
+import com.team19.admicroservice.dto.AdDTOSimple;
 import com.team19.admicroservice.dto.CarDTO;
 import com.team19.admicroservice.dto.CartItemDTO;
 import com.team19.admicroservice.dto.PriceListDTO;
@@ -148,4 +149,23 @@ public class AdServiceImpl implements AdService {
         }
         return cartItemDTOs;
     }
+
+    public AdDTOSimple getAdSimple(Long id) {
+
+        AdDTOSimple adDTO = new AdDTOSimple();
+        Ad ad = adRepository.findById(id).orElse(null);
+
+        if(ad != null)
+        {
+            adDTO.setId(ad.getId());
+            adDTO.setStartDate(ad.getStartDate());
+            adDTO.setEndDate(ad.getEndDate());
+
+            return adDTO;
+        }
+
+        else return null;
+    }
+
+
 }

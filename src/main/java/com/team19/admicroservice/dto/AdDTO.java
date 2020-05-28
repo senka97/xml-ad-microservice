@@ -1,5 +1,7 @@
 package com.team19.admicroservice.dto;
 
+import com.team19.admicroservice.model.Ad;
+
 import java.time.LocalDate;
 
 public class AdDTO {
@@ -24,6 +26,19 @@ public class AdDTO {
 
     public AdDTO(){
 
+    }
+
+    public AdDTO(Ad ad){
+        this.id = ad.getId();
+        this.ownerId = ad.getOwnerId();
+        this.startDate = ad.getStartDate();
+        this.endDate = ad.getEndDate();
+        this.limitKm = ad.getLimitKm();
+        this.cdw = ad.getCdw();
+        this.location = ad.getLocation();
+        this.priceList = new PriceListDTO(ad.getPriceList());
+        this.car = new CarDTO();
+        this.car.setId(ad.getCarId());
     }
 
     public Long getId() {

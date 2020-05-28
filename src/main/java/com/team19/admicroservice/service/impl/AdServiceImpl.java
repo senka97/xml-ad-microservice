@@ -14,17 +14,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Base64;
+
 import java.util.List;
-import java.util.Set;
+
 
 @Service
 public class AdServiceImpl implements AdService {
@@ -32,6 +25,7 @@ public class AdServiceImpl implements AdService {
     @Autowired
     private AdRepository adRepository;
 
+    @Autowired
     private CarClient carClient;
 
     @Override
@@ -39,7 +33,6 @@ public class AdServiceImpl implements AdService {
     {
         ArrayList<AdDTO> DTOAds = new ArrayList<>();
 
-        System.out.println("Usao u getAds Servis");
         List<Ad> ads = adRepository.findAll();
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -49,8 +42,8 @@ public class AdServiceImpl implements AdService {
         {
 
             AdDTO newAd = new AdDTO();
-
             CarDTO carDTO = new CarDTO();
+            carDTO.setId(ad.getCarId());
             //CarDTO carDTO = this.carClient.getCar(ad.getCarId(), cp.getPermissions(),cp.getUserID(),cp.getToken());
             //System.out.println("Vratio se iz car service");
             newAd.setCar(carDTO);
@@ -67,6 +60,7 @@ public class AdServiceImpl implements AdService {
             newAd.setPriceList(priceListDTO);
 
             newAd.setId(ad.getId());
+            newAd.setOwnerId(ad.getOwnerId());
             newAd.setStartDate(ad.getStartDate());
             newAd.setEndDate(ad.getEndDate());
             newAd.setLimitKm(ad.getLimitKm());
@@ -75,22 +69,25 @@ public class AdServiceImpl implements AdService {
 
             DTOAds.add(newAd);
         }
+        //napravim listu AdDTO sa praznim CarDTO i saljem tu listu u car service, on tamo popuni info za kola i vrati mi listu adDTO
+        ArrayList<AdDTO> DTOAds2 = this.carClient.findCars(DTOAds,cp.getPermissions(),cp.getUserID(),cp.getToken());
 
-        return DTOAds;
+        return  DTOAds2;
     }
 
     @Override
     public AdDTO getAd(Long id){
 
         Ad ad = adRepository.findById(id).orElse(null);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomPrincipal cp = (CustomPrincipal) auth.getPrincipal();
 
         if(ad != null)
         {
             AdDTO newAd = new AdDTO();
 
-            CarDTO carDTO = new CarDTO();
-            //CarDTO carDTO = this.carClient.getCar(ad.getCarId(), cp.getPermissions(),cp.getUserID(),cp.getToken());
-            //System.out.println("Vratio se iz car service");
+            CarDTO carDTO = this.carClient.getCar(ad.getCarId(), cp.getPermissions(),cp.getUserID(),cp.getToken());
+            System.out.println("Vratio se iz car service");
             newAd.setCar(carDTO);
 
             PriceList priceList = ad.getPriceList();
@@ -105,6 +102,7 @@ public class AdServiceImpl implements AdService {
             newAd.setPriceList(priceListDTO);
 
             newAd.setId(ad.getId());
+            newAd.setOwnerId(ad.getOwnerId());
             newAd.setStartDate(ad.getStartDate());
             newAd.setEndDate(ad.getEndDate());
             newAd.setLimitKm(ad.getLimitKm());

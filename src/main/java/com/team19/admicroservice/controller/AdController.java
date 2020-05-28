@@ -1,6 +1,7 @@
 package com.team19.admicroservice.controller;
 
 import com.team19.admicroservice.client.CarClient;
+import com.team19.admicroservice.dto.AdDTOSimple;
 import com.team19.admicroservice.security.CustomPrincipal;
 import com.team19.admicroservice.service.impl.AdServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,5 +30,11 @@ public class AdController {
     public ResponseEntity<?> getAd(@PathVariable("id") Long id)  {
 
         return new ResponseEntity<>(adService.getAd(id), HttpStatus.OK);
+    }
+
+    @GetMapping(value="/getAd/{id}", produces = "application/json")
+    public AdDTOSimple getAdSimple(@PathVariable("id") Long id)  {
+
+        return adService.getAdSimple(id);
     }
 }

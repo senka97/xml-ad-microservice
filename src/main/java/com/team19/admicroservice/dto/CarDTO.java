@@ -6,23 +6,23 @@ public class CarDTO {
 
     private Long id;
 
-    private int childrenSeats=0;
+    private int childrenSeats;
 
-    private double rate=0;
+    private double rate;
 
-    private double mileage=0;
+    private double mileage;
 
-    private boolean hasAndroidApp=false;
+    private boolean hasAndroidApp;
 
-    private String carBrand="...";
+    private String carBrand;
 
-    private String carModel="...";
+    private String carModel;
 
-    private String carClass="";
+    private String carClass;
 
-    private String transType="";
+    private String transType;
 
-    private String fuelType="";
+    private String fuelType;
 
     private ArrayList<String> photos64 = new ArrayList<>();
 

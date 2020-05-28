@@ -6,6 +6,8 @@ public class AdDTO {
 
     private Long id;
 
+    private Long ownerId;
+
     private LocalDate startDate;
 
     private LocalDate endDate;
@@ -86,5 +88,13 @@ public class AdDTO {
 
     public void setCar(CarDTO car) {
         this.car = car;
+    }
+
+    public Long getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
     }
 }

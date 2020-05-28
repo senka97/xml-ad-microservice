@@ -10,6 +10,9 @@ public class Ad {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name="ownerId")
+    private Long ownerId;
+
     @Column(name="startDate")
     private LocalDate startDate;
 
@@ -98,5 +101,13 @@ public class Ad {
 
     public void setPriceList(PriceList priceList) {
         this.priceList = priceList;
+    }
+
+    public Long getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
     }
 }

@@ -11,11 +11,11 @@ import java.util.List;
 @FeignClient(name = "car-service")
 public interface CarClient {
 
-    @GetMapping("api/cars/{id}")
+    @GetMapping(value = "api/cars/{id}", produces = "application/json")
     CarDTO getCar(@PathVariable("id") Long id, @RequestHeader("permissions") String permissions,
                          @RequestHeader("userID") String userId, @RequestHeader("Authorization") String token);
 
-    @PostMapping("api/cars/findCars")
+    @PostMapping(value = "api/cars/findCars", consumes = "application/json", produces = "application/json")
     ArrayList<AdDTO> findCars(@RequestBody List<AdDTO> ads, @RequestHeader("permissions") String permissions,
                              @RequestHeader("userID") String userId, @RequestHeader("Authorization") String token );
 }

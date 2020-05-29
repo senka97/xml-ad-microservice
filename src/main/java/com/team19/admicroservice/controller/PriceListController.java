@@ -1,10 +1,13 @@
 package com.team19.admicroservice.controller;
 
+import com.team19.admicroservice.dto.PriceListAdDTO;
 import com.team19.admicroservice.service.impl.PriceListServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api")
@@ -18,5 +21,11 @@ public class PriceListController {
     ResponseEntity<?> getUsersPriceLists(){
         return new ResponseEntity<>(priceListService.getPriceListsFromUser(), HttpStatus.OK);
 
+    }
+
+    @PostMapping(value = "/priceList/ads")
+    ResponseEntity<?> findPriceLists(@RequestBody List<PriceListAdDTO> priceListAdDTOs){
+
+          return new ResponseEntity(this.priceListService.findPriceLists(priceListAdDTOs), HttpStatus.OK);
     }
 }

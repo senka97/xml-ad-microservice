@@ -1,6 +1,7 @@
 package com.team19.admicroservice.service.impl;
 
 import com.team19.admicroservice.client.CarClient;
+import com.team19.admicroservice.client.UserClient;
 import com.team19.admicroservice.dto.AdDTO;
 import com.team19.admicroservice.dto.AdDTOSimple;
 import com.team19.admicroservice.dto.CarDTO;
@@ -17,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -34,6 +36,10 @@ public class AdServiceImpl implements AdService {
 
     @Autowired
     private PriceListServiceImpl priceListService;
+
+    @Autowired
+    private UserClient userClient;
+
     @Override
     public ArrayList<AdDTO> getAllAds()
     {
@@ -127,12 +133,20 @@ public class AdServiceImpl implements AdService {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CustomPrincipal cp = (CustomPrincipal) auth.getPrincipal();
 
+        //Uzimam usera iz user servica da vidim da li je client ako jeste proveravam koliko ima aktivnih oglasa
+        //Ako ima vise od 3 ne moze da postavi oglas
+        if(userClient.user(cp.getPermissions(),cp.getUserID(),cp.getToken()).getRole().equals("ROLE_CLIENT")){
+            System.out.println(getActiveAdsOfUser(Long.parseLong(cp.getUserID())).size());
+            if(getActiveAdsOfUser(Long.parseLong(cp.getUserID())).size()>=3){
+                return null;
+            }
+        }
 
-        System.out.println(adDTO.getLocation());
-        System.out.println(adDTO.getCar().getCarBrand());
         if(adDTO.getCar().getId() == null){
+            //ako je izabran novi auto salje zahtev na car client za kreiranje novog auta
             car = carClient.addCar(adDTO.getCar(), cp.getPermissions(),cp.getUserID(),cp.getToken());
         }else{
+            //ako je izabran postojeci auto koji nema aktivan oglas onda se salje get zahtev car clijentu za taj auto
             car =carClient.getCar(adDTO.getCar().getId(), cp.getPermissions(),cp.getUserID(),cp.getToken());
         }
 
@@ -145,7 +159,10 @@ public class AdServiceImpl implements AdService {
         newAd.setLocation(adDTO.getLocation());
         newAd.setOwnerId(Long.parseLong(cp.getUserID()));
         newAd.setPriceList(priceListService.findById(adDTO.getPriceList().getId()));
-        adRepository.save(newAd);
+
+        newAd=adRepository.save(newAd);
+
+        adDTO.setId(newAd.getId());
         return adDTO;
     }
 
@@ -215,6 +232,19 @@ public class AdServiceImpl implements AdService {
         else return null;
     }
 
+    @Override
+    public ArrayList<Ad> getActiveAdsOfUser(Long id) {
+        ArrayList<Ad> ads = adRepository.findAllByOwnerId(id);
+        ArrayList<Ad> activeAds = new ArrayList<>();
+
+        for(Ad ad: ads){
+            if(ad.getEndDate().isAfter(LocalDate.now())){
+                activeAds.add(ad);
+            }
+        }
+        return activeAds;
+    }
+  
     @Override
     public boolean hideAdsForBlockedClient(Long id) {
         ArrayList<Ad> ads = adRepository.findAllByOwnerId(id);

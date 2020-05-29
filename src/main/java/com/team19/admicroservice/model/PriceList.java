@@ -10,6 +10,9 @@ public class PriceList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name="ownerId")
+    private Long ownerId;
+
     @Column(name="pricePerKm")
     private double pricePerKm;
 
@@ -87,5 +90,13 @@ public class PriceList {
 
     public void setAds(Set<Ad> ads) {
         this.ads = ads;
+    }
+
+    public Long getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
     }
 }

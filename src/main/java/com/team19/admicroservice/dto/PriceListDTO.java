@@ -1,5 +1,7 @@
 package com.team19.admicroservice.dto;
 
+import com.team19.admicroservice.model.PriceList;
+
 public class PriceListDTO {
 
     private Long id;
@@ -17,6 +19,16 @@ public class PriceListDTO {
     public PriceListDTO()
     {
 
+    }
+
+    public PriceListDTO(PriceList priceList)
+    {
+        id=priceList.getId();
+        pricePerKm = priceList.getPricePerKm();
+        pricePerDay = priceList.getPricePerDay();
+        discount20Days = priceList.getDiscount20Days();
+        discount30Days = priceList.getDiscount30Days();
+        alias = priceList.getAlias();
     }
 
     public Long getId() {

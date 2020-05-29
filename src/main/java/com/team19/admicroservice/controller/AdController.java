@@ -1,19 +1,12 @@
 package com.team19.admicroservice.controller;
 
-import com.team19.admicroservice.client.CarClient;
 import com.team19.admicroservice.dto.AdDTO;
 import com.team19.admicroservice.dto.CartItemDTO;
-import com.team19.admicroservice.model.Ad;
 import com.team19.admicroservice.dto.AdDTOSimple;
-
-import com.team19.admicroservice.security.CustomPrincipal;
 import com.team19.admicroservice.service.impl.AdServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -112,5 +105,22 @@ public class AdController {
         return adService.getAdSimple(id);
     }
 
+    @PutMapping(value = "/ad/block/client/{id}")
+    public ResponseEntity<?> hideAdsForBlockedClient(@PathVariable("id") Long id) {
+        if(adService.hideAdsForBlockedClient(id)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @PutMapping(value = "/ad/activate/client/{id}")
+    public ResponseEntity<?> showAdsForActiveClient(@PathVariable("id") Long id) {
+        if(adService.showAdsForActiveClient(id)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
 
 }

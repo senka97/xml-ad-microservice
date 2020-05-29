@@ -6,6 +6,7 @@ import com.team19.admicroservice.dto.AdDTOSimple;
 import com.team19.admicroservice.model.Ad;
 import org.hibernate.mapping.Array;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,4 +20,6 @@ public interface AdService {
     List<CartItemDTO> fillCartItems(List<CartItemDTO> cartItemDTOs);
     AdDTOSimple getAdSimple(Long id);
     ArrayList<Ad> getActiveAdsOfUser(Long id);
+    boolean hideAdsForBlockedClient(Long id);
+    boolean showAdsForActiveClient(Long id);
 }

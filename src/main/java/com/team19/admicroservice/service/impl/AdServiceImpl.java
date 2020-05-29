@@ -224,6 +224,7 @@ public class AdServiceImpl implements AdService {
             adDTO.setId(ad.getId());
             adDTO.setStartDate(ad.getStartDate());
             adDTO.setEndDate(ad.getEndDate());
+            adDTO.setCarId(ad.getCarId());
 
             return adDTO;
         }
@@ -242,6 +243,36 @@ public class AdServiceImpl implements AdService {
             }
         }
         return activeAds;
+    }
+  
+    @Override
+    public boolean hideAdsForBlockedClient(Long id) {
+        ArrayList<Ad> ads = adRepository.findAllByOwnerId(id);
+
+        if (!ads.isEmpty()) {
+            for (Ad a : ads) {
+                a.setVisible(false);
+                adRepository.save(a);
+            }
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean showAdsForActiveClient(Long id) {
+        ArrayList<Ad> ads = adRepository.findAllByOwnerId(id);
+
+        if (!ads.isEmpty()) {
+            for (Ad a : ads) {
+                a.setVisible(true);
+                adRepository.save(a);
+            }
+            return true;
+        }
+
+        return false;
     }
 
 }

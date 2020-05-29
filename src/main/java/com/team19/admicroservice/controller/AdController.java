@@ -1,5 +1,6 @@
 package com.team19.admicroservice.controller;
 
+import com.team19.admicroservice.dto.AdDTO;
 import com.team19.admicroservice.dto.CartItemDTO;
 import com.team19.admicroservice.dto.AdDTOSimple;
 import com.team19.admicroservice.service.impl.AdServiceImpl;
@@ -37,6 +38,19 @@ public class AdController {
     }
 
 
+    @PostMapping(value = "/ad", consumes="application/json")
+    public ResponseEntity<?> postAd(@RequestBody AdDTO adDTO){
+
+        adService.postNewAd(adDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping(value="/ad/car/{car_id}/active", produces = "application/json")
+    public ResponseEntity<?> checkIfCarHasActiveAds(@PathVariable("car_id") Long id)  {
+        return new ResponseEntity<>(adService.carHasActiveAds(id), HttpStatus.OK);
+    }
+
+
     @PostMapping(value="/ads/cartItems", consumes = "application/json", produces = "application/json")
     public List<CartItemDTO> findAds(@RequestBody List<CartItemDTO> cartItemDTOs){
 
@@ -49,5 +63,6 @@ public class AdController {
 
         return adService.getAdSimple(id);
     }
+
 
 }

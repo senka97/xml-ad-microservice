@@ -11,6 +11,8 @@ public interface AdService {
 
     ArrayList<AdDTO> getAllAds();
     AdDTO getAd(Long id);
+    AdDTO postNewAd(AdDTO adDTO);
+    AdDTO carHasActiveAds(Long car_id);
     Long getAdOwner(Long id);
     List<CartItemDTO> fillCartItems(List<CartItemDTO> cartItemDTOs);
     AdDTOSimple getAdSimple(Long id);

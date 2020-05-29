@@ -18,4 +18,8 @@ public interface CarClient {
     @PostMapping(value = "api/cars/findCars", consumes = "application/json", produces = "application/json")
     ArrayList<AdDTO> findCars(@RequestBody List<AdDTO> ads, @RequestHeader("permissions") String permissions,
                              @RequestHeader("userID") String userId, @RequestHeader("Authorization") String token );
+
+    @GetMapping("api/car")
+    CarDTO addCar(@RequestBody CarDTO carDTO, @RequestHeader("permissions") String permissions,
+                              @RequestHeader("userID") String userId, @RequestHeader("Authorization") String token );
 }

@@ -31,6 +31,9 @@ public class Ad {
     @Column(name="carId")
     private Long carId;
 
+    @Column(name = "visible")
+    private boolean visible;
+
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private PriceList priceList;
 
@@ -109,5 +112,13 @@ public class Ad {
 
     public void setOwnerId(Long ownerId) {
         this.ownerId = ownerId;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 }

@@ -64,5 +64,22 @@ public class AdController {
         return adService.getAdSimple(id);
     }
 
+    @PutMapping(value = "/ad/block/client/{id}")
+    public ResponseEntity<?> hideAdsForBlockedClient(@PathVariable("id") Long id) {
+        if(adService.hideAdsForBlockedClient(id)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @PutMapping(value = "/ad/activate/client/{id}")
+    public ResponseEntity<?> showAdsForActiveClient(@PathVariable("id") Long id) {
+        if(adService.showAdsForActiveClient(id)) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
 
 }

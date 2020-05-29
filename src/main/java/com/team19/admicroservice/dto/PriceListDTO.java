@@ -21,14 +21,13 @@ public class PriceListDTO {
 
     }
 
-    public PriceListDTO(PriceList priceList)
-    {
-        id=priceList.getId();
-        pricePerKm = priceList.getPricePerKm();
-        pricePerDay = priceList.getPricePerDay();
-        discount20Days = priceList.getDiscount20Days();
-        discount30Days = priceList.getDiscount30Days();
-        alias = priceList.getAlias();
+    public PriceListDTO(PriceList priceList){
+        this.id = priceList.getId();
+        this.pricePerKm = priceList.getPricePerKm();
+        this.pricePerDay = priceList.getPricePerDay();
+        this.discount20Days = priceList.getDiscount20Days();
+        this.discount30Days = priceList.getDiscount30Days();
+        this.alias = priceList.getAlias();
     }
 
     public Long getId() {

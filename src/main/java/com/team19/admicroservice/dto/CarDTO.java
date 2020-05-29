@@ -118,4 +118,8 @@ public class CarDTO {
     public void setPhotos64(ArrayList<String> photos64) {
         this.photos64 = photos64;
     }
+
+    public boolean isHasAndroidApp() {
+        return hasAndroidApp;
+    }
 }

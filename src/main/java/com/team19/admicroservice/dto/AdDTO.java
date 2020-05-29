@@ -112,4 +112,6 @@ public class AdDTO {
     public void setOwnerId(Long ownerId) {
         this.ownerId = ownerId;
     }
+
+
 }

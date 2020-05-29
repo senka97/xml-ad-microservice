@@ -11,11 +11,13 @@ import com.team19.admicroservice.model.PriceList;
 import com.team19.admicroservice.repository.AdRepository;
 import com.team19.admicroservice.security.CustomPrincipal;
 import com.team19.admicroservice.service.AdService;
+import com.team19.admicroservice.service.PriceListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import java.util.List;
@@ -30,6 +32,8 @@ public class AdServiceImpl implements AdService {
     @Autowired
     private CarClient carClient;
 
+    @Autowired
+    private PriceListServiceImpl priceListService;
     @Override
     public ArrayList<AdDTO> getAllAds()
     {
@@ -118,6 +122,49 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
+    public AdDTO postNewAd(AdDTO adDTO) {
+        CarDTO car = new CarDTO();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomPrincipal cp = (CustomPrincipal) auth.getPrincipal();
+
+
+        System.out.println(adDTO.getLocation());
+        System.out.println(adDTO.getCar().getCarBrand());
+        if(adDTO.getCar().getId() == null){
+            car = carClient.addCar(adDTO.getCar(), cp.getPermissions(),cp.getUserID(),cp.getToken());
+        }else{
+            car =carClient.getCar(adDTO.getCar().getId(), cp.getPermissions(),cp.getUserID(),cp.getToken());
+        }
+
+        Ad newAd = new Ad();
+        newAd.setCarId(car.getId());
+        newAd.setCdw(adDTO.isCdw());
+        newAd.setStartDate(adDTO.getStartDate());
+        newAd.setEndDate(adDTO.getEndDate());
+        newAd.setLimitKm(adDTO.getLimitKm());
+        newAd.setLocation(adDTO.getLocation());
+        newAd.setOwnerId(Long.parseLong(cp.getUserID()));
+        newAd.setPriceList(priceListService.findById(adDTO.getPriceList().getId()));
+        adRepository.save(newAd);
+        return adDTO;
+    }
+
+    //proverava da li auto ima aktivan oglas ako ima vraca id od tog oglasa ako ne vraca prazan objekat
+    @Override
+    public AdDTO carHasActiveAds(Long car_id) {
+        System.out.println("*****Proveravam******");
+        ArrayList<Ad> ads = adRepository.findAllByCarId(car_id);
+        LocalDate now =LocalDate.now();
+        AdDTO adDTO = new AdDTO();
+        for(Ad ad: ads){
+            if(ad.getEndDate().isAfter(now)){
+                adDTO.setId(ad.getId());
+                return adDTO;
+            }
+        }
+        return null;
+    }
+
     public Long getAdOwner(Long id) {
 
         Ad ad = adRepository.findById(id).orElse(null);
@@ -166,6 +213,5 @@ public class AdServiceImpl implements AdService {
 
         else return null;
     }
-
 
 }

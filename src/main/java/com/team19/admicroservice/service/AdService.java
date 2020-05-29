@@ -3,6 +3,8 @@ package com.team19.admicroservice.service;
 import com.team19.admicroservice.dto.AdDTO;
 import com.team19.admicroservice.dto.CartItemDTO;
 import com.team19.admicroservice.dto.AdDTOSimple;
+import com.team19.admicroservice.model.Ad;
+import org.hibernate.mapping.Array;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,4 +18,5 @@ public interface AdService {
     Long getAdOwner(Long id);
     List<CartItemDTO> fillCartItems(List<CartItemDTO> cartItemDTOs);
     AdDTOSimple getAdSimple(Long id);
+    ArrayList<Ad> getActiveAdsOfUser(Long id);
 }

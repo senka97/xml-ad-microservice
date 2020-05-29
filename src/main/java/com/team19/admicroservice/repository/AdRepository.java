@@ -8,4 +8,5 @@ import java.util.ArrayList;
 public interface AdRepository extends JpaRepository<Ad, Long> {
 
     ArrayList<Ad> findAllByCarId(Long id);
+    ArrayList<Ad> findAllByOwnerId(Long id);
 }

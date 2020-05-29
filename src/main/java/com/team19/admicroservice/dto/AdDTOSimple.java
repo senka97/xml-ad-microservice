@@ -10,6 +10,8 @@ public class AdDTOSimple {
 
     private LocalDate endDate;
 
+    private Long carId;
+
     public AdDTOSimple()
     {
 
@@ -37,5 +39,13 @@ public class AdDTOSimple {
 
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
+    }
+
+    public Long getCarId() {
+        return carId;
+    }
+
+    public void setCarId(Long carId) {
+        this.carId = carId;
     }
 }

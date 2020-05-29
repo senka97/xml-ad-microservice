@@ -207,6 +207,7 @@ public class AdServiceImpl implements AdService {
             adDTO.setId(ad.getId());
             adDTO.setStartDate(ad.getStartDate());
             adDTO.setEndDate(ad.getEndDate());
+            adDTO.setCarId(ad.getCarId());
 
             return adDTO;
         }

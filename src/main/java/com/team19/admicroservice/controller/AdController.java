@@ -2,6 +2,7 @@ package com.team19.admicroservice.controller;
 
 import com.team19.admicroservice.client.CarClient;
 import com.team19.admicroservice.dto.AdDTO;
+import com.team19.admicroservice.dto.AdFrontDTO;
 import com.team19.admicroservice.dto.CarDTO;
 import com.team19.admicroservice.dto.CartItemDTO;
 import com.team19.admicroservice.dto.AdDTOSimple;
@@ -134,6 +135,13 @@ public class AdController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+
+    @PostMapping(value="/ads/fill")
+    public List<AdFrontDTO> fillAdsWithInformation(@RequestBody List<Long> adIDs){
+
+          return this.adService.fillAdsWithInformation(adIDs);
+    }
+
     @GetMapping(value="/ad/{from_date}/{to_date}/{location}", produces = "application/json")
     public ResponseEntity<?> simpleSearch(@PathVariable("from_date") String fromDateString,@PathVariable("to_date") String toDateString,@PathVariable("location") String location)  {
         System.out.println("Searching");
@@ -239,5 +247,6 @@ public class AdController {
         }
         return new ResponseEntity(adDTOS, HttpStatus.OK);
     }
+
 
 }

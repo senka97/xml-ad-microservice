@@ -7,6 +7,7 @@ import com.team19.admicroservice.model.Ad;
 import org.hibernate.mapping.Array;
 
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,4 +23,6 @@ public interface AdService {
     ArrayList<Ad> getActiveAdsOfUser(Long id);
     boolean hideAdsForBlockedClient(Long id);
     boolean showAdsForActiveClient(Long id);
+    ArrayList<AdDTO> simpleSerach(LocalDate fromDate,LocalDate toDate,String location);
+    ArrayList<AdDTO> extendedSearch(LocalDate fromDate,LocalDate toDate,String location,float priceFrom,float priceTo,int kmLimit,boolean cdw);
 }

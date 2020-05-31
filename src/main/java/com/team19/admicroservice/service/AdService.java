@@ -1,6 +1,7 @@
 package com.team19.admicroservice.service;
 
 import com.team19.admicroservice.dto.AdDTO;
+import com.team19.admicroservice.dto.AdFrontDTO;
 import com.team19.admicroservice.dto.CartItemDTO;
 import com.team19.admicroservice.dto.AdDTOSimple;
 import com.team19.admicroservice.model.Ad;
@@ -22,4 +23,5 @@ public interface AdService {
     ArrayList<Ad> getActiveAdsOfUser(Long id);
     boolean hideAdsForBlockedClient(Long id);
     boolean showAdsForActiveClient(Long id);
+    List<AdFrontDTO> fillAdsWithInformation(List<Long> adIDs);
 }

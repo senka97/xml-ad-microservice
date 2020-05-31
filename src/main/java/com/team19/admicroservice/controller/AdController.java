@@ -1,6 +1,7 @@
 package com.team19.admicroservice.controller;
 
 import com.team19.admicroservice.dto.AdDTO;
+import com.team19.admicroservice.dto.AdFrontDTO;
 import com.team19.admicroservice.dto.CartItemDTO;
 import com.team19.admicroservice.dto.AdDTOSimple;
 import com.team19.admicroservice.service.impl.AdServiceImpl;
@@ -123,4 +124,9 @@ public class AdController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    @PostMapping(value="/ads/fill")
+    public List<AdFrontDTO> fillAdsWithInformation(@RequestBody List<Long> adIDs){
+
+          return this.adService.fillAdsWithInformation(adIDs);
+    }
 }

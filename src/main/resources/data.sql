@@ -4,3 +4,13 @@ insert into price_list (alias, discount20Days, discount30Days, price_per_day, pr
 insert into ad (start_date, end_date, limit_km, cdw, car_id, price_list_id, location, owner_id, visible) value ('2020-05-05','2020-06-05','0',false,1,1,'Novi Sad',2, true);
 insert into ad (start_date, end_date, limit_km, cdw, car_id, price_list_id, location, owner_id, visible) value ('2020-06-01','2020-06-30','0',true,2,1,'Novi Sad',2, true);
 insert into ad (start_date, end_date, limit_km, cdw, car_id, price_list_id, location, owner_id, visible) value ('2020-04-01','2020-04-30','0',false,3,2, 'Beograd',3, true);
+
+insert into user_can_post_comment ( user_id, ad_id, posted) value ( 3, 1, true);
+insert into user_can_post_comment ( user_id, ad_id, posted) value ( 3, 1, true);
+insert into user_can_post_comment ( user_id, ad_id, posted) value ( 3, 1, true);
+insert into user_can_post_comment ( user_id, ad_id, posted) value ( 3, 1, true);
+insert into user_can_post_comment ( user_id, ad_id, posted) value ( 3, 1, false);
+insert into user_can_post_comment ( user_id, ad_id, posted) value ( 3, 1, false);
+insert into user_can_post_comment ( user_id, ad_id, posted) value ( 3, 2, true);
+insert into user_can_post_comment ( user_id, ad_id, posted) value ( 3, 2, true);
+insert into user_can_post_comment ( user_id, ad_id, posted) value ( 3, 2, false);

@@ -2,11 +2,7 @@ package com.team19.admicroservice.service.impl;
 
 import com.team19.admicroservice.client.CarClient;
 import com.team19.admicroservice.client.UserClient;
-import com.team19.admicroservice.dto.AdDTO;
-import com.team19.admicroservice.dto.AdDTOSimple;
-import com.team19.admicroservice.dto.CarDTO;
-import com.team19.admicroservice.dto.CartItemDTO;
-import com.team19.admicroservice.dto.PriceListDTO;
+import com.team19.admicroservice.dto.*;
 import com.team19.admicroservice.model.Ad;
 import com.team19.admicroservice.model.PriceList;
 import com.team19.admicroservice.repository.AdRepository;
@@ -276,6 +272,27 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
+    public List<AdFrontDTO> fillAdsWithInformation(List<Long> adIDs) {
+
+        List<AdDTO> adDTOs = new ArrayList<>();
+        List<AdFrontDTO> adFrontDTOs = new ArrayList<>();
+        for (Long id : adIDs) {
+            Ad ad = adRepository.findById(id).orElse(null);
+            if (ad != null) {
+                adDTOs.add(new AdDTO(ad));
+            }
+        }
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomPrincipal cp = (CustomPrincipal) auth.getPrincipal();
+        adDTOs = this.carClient.findCars(adDTOs, cp.getPermissions(), cp.getUserID(), cp.getToken());
+        for (AdDTO adDTO : adDTOs) {
+            adFrontDTOs.add(new AdFrontDTO(adDTO));
+        }
+
+        return adFrontDTOs;
+    }
+
     public ArrayList<AdDTO> simpleSerach(LocalDate fromDate, LocalDate toDate, String location) {
         ArrayList<Ad> ads = adRepository.simpleSerach(fromDate,toDate,location);
         ArrayList<AdDTO> adDTOS = new ArrayList<>();

@@ -159,7 +159,7 @@ public class AdServiceImpl implements AdService {
         newAd.setLocation(adDTO.getLocation());
         newAd.setOwnerId(Long.parseLong(cp.getUserID()));
         newAd.setPriceList(priceListService.findById(adDTO.getPriceList().getId()));
-
+        newAd.setVisible(true);
         newAd=adRepository.save(newAd);
 
         adDTO.setId(newAd.getId());

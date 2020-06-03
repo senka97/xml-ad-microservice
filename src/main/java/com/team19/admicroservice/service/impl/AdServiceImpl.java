@@ -242,7 +242,7 @@ public class AdServiceImpl implements AdService {
     }
   
     @Override
-    public boolean hideAdsForBlockedClient(Long id) {
+    public void hideAdsForBlockedClient(Long id) {
         ArrayList<Ad> ads = adRepository.findAllByOwnerId(id);
 
         if (!ads.isEmpty()) {
@@ -250,14 +250,11 @@ public class AdServiceImpl implements AdService {
                 a.setVisible(false);
                 adRepository.save(a);
             }
-            return true;
         }
-
-        return false;
     }
 
     @Override
-    public boolean showAdsForActiveClient(Long id) {
+    public void showAdsForActiveClient(Long id) {
         ArrayList<Ad> ads = adRepository.findAllByOwnerId(id);
 
         if (!ads.isEmpty()) {
@@ -265,10 +262,7 @@ public class AdServiceImpl implements AdService {
                 a.setVisible(true);
                 adRepository.save(a);
             }
-            return true;
         }
-
-        return false;
     }
 
     @Override

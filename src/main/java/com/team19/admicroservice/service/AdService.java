@@ -19,8 +19,8 @@ public interface AdService {
     List<CartItemDTO> fillCartItems(List<CartItemDTO> cartItemDTOs);
     AdDTOSimple getAdSimple(Long id);
     ArrayList<Ad> getActiveAdsOfUser(Long id);
-    boolean hideAdsForBlockedClient(Long id);
-    boolean showAdsForActiveClient(Long id);
+    void hideAdsForBlockedClient(Long id);
+    void showAdsForActiveClient(Long id);
     List<AdFrontDTO> fillAdsWithInformation(List<Long> adIDs);
     ArrayList<AdDTO> simpleSerach(LocalDate fromDate,LocalDate toDate,String location);
     ArrayList<AdDTO> extendedSearch(LocalDate fromDate,LocalDate toDate,String location,float priceFrom,float priceTo,int kmLimit,boolean cdw);

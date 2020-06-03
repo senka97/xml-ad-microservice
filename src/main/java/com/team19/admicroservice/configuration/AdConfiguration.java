@@ -47,7 +47,7 @@ public class AdConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
-                .antMatchers("/h2-console/**", "/hello")
+                .antMatchers("/h2-console/**", "/api/ad/**","/api/search/**","/api/ads/**","/api/canPost/**")
                 .permitAll()
                 .anyRequest().authenticated();
 

@@ -1,9 +1,6 @@
 package com.team19.admicroservice.service;
 
-import com.team19.admicroservice.dto.AdDTO;
-import com.team19.admicroservice.dto.AdFrontDTO;
-import com.team19.admicroservice.dto.CartItemDTO;
-import com.team19.admicroservice.dto.AdDTOSimple;
+import com.team19.admicroservice.dto.*;
 import com.team19.admicroservice.model.Ad;
 import org.hibernate.mapping.Array;
 
@@ -18,7 +15,7 @@ public interface AdService {
     AdDTO getAd(Long id);
     AdDTO postNewAd(AdDTO adDTO);
     AdDTO carHasActiveAds(Long car_id);
-    Long getAdOwner(Long id);
+    AdOwnerDTO getAdOwner(Long id);
     List<CartItemDTO> fillCartItems(List<CartItemDTO> cartItemDTOs);
     AdDTOSimple getAdSimple(Long id);
     ArrayList<Ad> getActiveAdsOfUser(Long id);

@@ -9,13 +9,13 @@ insert into ad (start_date, end_date, limit_km, cdw, car_id, price_list_id, loca
 insert into ad (start_date, end_date, limit_km, cdw, car_id, price_list_id, location, owner_id, visible) value ('2020-06-01','2020-06-30','700',false,5,1, 'Beograd',2, true);
 insert into ad (start_date, end_date, limit_km, cdw, car_id, price_list_id, location, owner_id, visible) value ('2020-06-01','2020-06-17','0',false,6,1, 'Novi Sad',2, true);
 
-insert into user_can_post_comment ( user_id, ad_id, posted) value ( 3, 1, true);
-insert into user_can_post_comment ( user_id, ad_id, posted) value ( 3, 1, true);
-insert into user_can_post_comment ( user_id, ad_id, posted) value ( 3, 1, true);
-insert into user_can_post_comment ( user_id, ad_id, posted) value ( 3, 1, true);
-insert into user_can_post_comment ( user_id, ad_id, posted) value ( 3, 1, false);
-insert into user_can_post_comment ( user_id, ad_id, posted) value ( 3, 1, false);
-insert into user_can_post_comment ( user_id, ad_id, posted) value ( 3, 2, true);
-insert into user_can_post_comment ( user_id, ad_id, posted) value ( 3, 2, true);
-insert into user_can_post_comment ( user_id, ad_id, posted) value ( 3, 2, false);
+insert into user_can_post_comment ( user_id, ad_id, posted) value ( 3, 4, true);
+insert into user_can_post_comment ( user_id, ad_id, posted) value ( 3, 4, true);
+insert into user_can_post_comment ( user_id, ad_id, posted) value ( 3, 4, true);
+insert into user_can_post_comment ( user_id, ad_id, posted) value ( 3, 4, true);
+insert into user_can_post_comment ( user_id, ad_id, posted) value ( 3, 4, false);
+insert into user_can_post_comment ( user_id, ad_id, posted) value ( 3, 4, false);
+insert into user_can_post_comment ( user_id, ad_id, posted) value ( 3, 5, true);
+insert into user_can_post_comment ( user_id, ad_id, posted) value ( 3, 5, true);
+insert into user_can_post_comment ( user_id, ad_id, posted) value ( 3, 5, false);
 

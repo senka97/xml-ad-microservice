@@ -2,20 +2,16 @@ package com.team19.admicroservice.controller;
 
 import com.team19.admicroservice.client.CarClient;
 import com.team19.admicroservice.dto.*;
-import com.team19.admicroservice.security.CustomPrincipal;
 import com.team19.admicroservice.service.impl.AdServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api")
@@ -29,6 +25,7 @@ public class AdController {
     private CarClient carClient;
 
     @GetMapping(value="/ads", produces = "application/json")
+    //posto ova metoda vise nece trebati, moze se dopuniti i iskoristiti kada se budu dobavljali oglasi za jednog korisnika npr
     public ResponseEntity<?> getAllAds()  {
 
         return new ResponseEntity<>(adService.getAllAds(), HttpStatus.OK);
@@ -110,6 +107,7 @@ public class AdController {
 
 
     @GetMapping(value="/getAd/{id}", produces = "application/json")
+    //treba svi da mogu da pristupe jer se poziva iz komentara, a njih svi mogu da citaju
     public AdDTOSimple getAdSimple(@PathVariable("id") Long id)  {
 
         return adService.getAdSimple(id);

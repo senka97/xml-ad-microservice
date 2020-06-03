@@ -1,11 +1,7 @@
 package com.team19.admicroservice.controller;
 
 import com.team19.admicroservice.client.CarClient;
-import com.team19.admicroservice.dto.AdDTO;
-import com.team19.admicroservice.dto.AdFrontDTO;
-import com.team19.admicroservice.dto.CarDTO;
-import com.team19.admicroservice.dto.CartItemDTO;
-import com.team19.admicroservice.dto.AdDTOSimple;
+import com.team19.admicroservice.dto.*;
 import com.team19.admicroservice.security.CustomPrincipal;
 import com.team19.admicroservice.service.impl.AdServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +42,7 @@ public class AdController {
     }
 
     @GetMapping(value="/ads/{id}/owner", produces = "application/json")
-    public Long getAdOwner(@PathVariable("id") Long id){
+    public AdOwnerDTO getAdOwner(@PathVariable("id") Long id){
            return adService.getAdOwner(id);
     }
 
@@ -238,9 +234,10 @@ public class AdController {
 
         ArrayList<AdDTO> adDTOS = adService.extendedSearch(fromDate,toDate,location,priceFrom,priceTo,kmLimit,cdw);
 
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        CustomPrincipal cp = (CustomPrincipal) auth.getPrincipal();
-        ArrayList<CarDTO> cars = carClient.searchCars(brand,model,feulType,classType,transType,mileage,childrenSeats,cp.getPermissions(), cp.getUserID(), cp.getToken());
+        //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        //CustomPrincipal cp = (CustomPrincipal) auth.getPrincipal();
+        //ArrayList<CarDTO> cars = carClient.searchCars(brand,model,feulType,classType,transType,mileage,childrenSeats,cp.getPermissions(), cp.getUserID(), cp.getToken());
+        ArrayList<CarDTO> cars = carClient.searchCars(brand,model,feulType,classType,transType,mileage,childrenSeats);
 
         System.out.println(adDTOS.size() + " "+cars.size());
 

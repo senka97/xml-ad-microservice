@@ -12,8 +12,7 @@ import java.util.List;
 public interface CarClient {
 
     @GetMapping(value = "api/cars/{id}", produces = "application/json")
-    CarDTO getCar(@PathVariable("id") Long id, @RequestHeader("permissions") String permissions,
-                         @RequestHeader("userID") String userId, @RequestHeader("Authorization") String token);
+    CarDTO getCar(@PathVariable("id") Long id);
 
     @PostMapping(value = "api/cars/findCars", consumes = "application/json", produces = "application/json")
     ArrayList<AdDTO> findCars(@RequestBody List<AdDTO> ads, @RequestHeader("permissions") String permissions,
@@ -27,6 +26,5 @@ public interface CarClient {
     ArrayList<CarDTO> searchCars(@PathVariable("brand") String brand,@PathVariable("model") String model,
                                  @PathVariable("feul_type") String feulType,@PathVariable("class_type") String classType,
                                  @PathVariable("transmission_type") String transType,@PathVariable("mileage") int mileage,
-                                 @PathVariable("children_seats") int childrenSeats,  @RequestHeader("permissions") String permissions,
-                                 @RequestHeader("userID") String userId, @RequestHeader("Authorization") String token);
+                                 @PathVariable("children_seats") int childrenSeats);
 }

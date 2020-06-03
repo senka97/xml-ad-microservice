@@ -87,14 +87,14 @@ public class AdServiceImpl implements AdService {
     public AdDTO getAd(Long id){
 
         Ad ad = adRepository.findById(id).orElse(null);
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        CustomPrincipal cp = (CustomPrincipal) auth.getPrincipal();
+        //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        //CustomPrincipal cp = (CustomPrincipal) auth.getPrincipal();
 
         if(ad != null)
         {
             AdDTO newAd = new AdDTO();
 
-            CarDTO carDTO = this.carClient.getCar(ad.getCarId(), cp.getPermissions(),cp.getUserID(),cp.getToken());
+            CarDTO carDTO = this.carClient.getCar(ad.getCarId());
             System.out.println("Vratio se iz car service");
             newAd.setCar(carDTO);
 
@@ -143,7 +143,7 @@ public class AdServiceImpl implements AdService {
             car = carClient.addCar(adDTO.getCar(), cp.getPermissions(),cp.getUserID(),cp.getToken());
         }else{
             //ako je izabran postojeci auto koji nema aktivan oglas onda se salje get zahtev car clijentu za taj auto
-            car =carClient.getCar(adDTO.getCar().getId(), cp.getPermissions(),cp.getUserID(),cp.getToken());
+            car =carClient.getCar(adDTO.getCar().getId());
         }
 
         Ad newAd = new Ad();
@@ -178,13 +178,13 @@ public class AdServiceImpl implements AdService {
         return null;
     }
 
-    public Long getAdOwner(Long id) {
+    public AdOwnerDTO getAdOwner(Long id) {
 
         Ad ad = adRepository.findById(id).orElse(null);
         if(ad == null) {
             return null;
         }else{
-            return ad.getOwnerId();
+            return new AdOwnerDTO(ad.getOwnerId(),ad.getStartDate(),ad.getEndDate());
         }
     }
 
@@ -296,14 +296,15 @@ public class AdServiceImpl implements AdService {
     public ArrayList<AdDTO> simpleSerach(LocalDate fromDate, LocalDate toDate, String location) {
         ArrayList<Ad> ads = adRepository.simpleSerach(fromDate,toDate,location);
         ArrayList<AdDTO> adDTOS = new ArrayList<>();
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        CustomPrincipal cp = (CustomPrincipal) auth.getPrincipal();
+        //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        //CustomPrincipal cp = (CustomPrincipal) auth.getPrincipal();
 
         for(Ad ad:ads){
             System.out.println("Visible: "+ad.isVisible());
             if(ad.isVisible()) {
                 AdDTO adDTO = new AdDTO(ad);
-                CarDTO carDTO = this.carClient.getCar(ad.getCarId(), cp.getPermissions(), cp.getUserID(), cp.getToken());
+                //CarDTO carDTO = this.carClient.getCar(ad.getCarId(), cp.getPermissions(), cp.getUserID(), cp.getToken());
+                CarDTO carDTO = this.carClient.getCar(ad.getCarId());
                 adDTO.setCar(carDTO);
                 adDTOS.add(adDTO);
             }

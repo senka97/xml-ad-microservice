@@ -137,13 +137,19 @@ public class AdController {
         System.out.println("Searching");
         LocalDate fromDate = LocalDate.parse(fromDateString);
         LocalDate toDate = LocalDate.parse(toDateString);
+        LocalDate minDate = LocalDate.now();
+        minDate = minDate.plusDays(2);
 
         if(fromDate == null || toDate == null){
-            return new ResponseEntity<>("Both start and end date must be selected",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Both pick-up and return date must be selected",HttpStatus.BAD_REQUEST);
+        }
+
+        if(fromDate.isBefore(minDate)){
+            return new ResponseEntity<>("Pick-up date must be minimum 48 hours from today.",HttpStatus.BAD_REQUEST);
         }
 
         if(fromDate.isAfter(toDate)){
-            return new ResponseEntity<>("Start date cannot be after end date.",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Pick-up date cannot be after return date.",HttpStatus.BAD_REQUEST);
         }
 
         if(!location.matches("[a-zA-Z0-9 ]+$")){
@@ -199,13 +205,20 @@ public class AdController {
         System.out.println("Searching");
         LocalDate fromDate = LocalDate.parse(fromDateString);
         LocalDate toDate = LocalDate.parse(toDateString);
+        LocalDate minDate = LocalDate.now();
+        minDate = minDate.plusDays(2);
 
         if(fromDate == null || toDate == null){
-            return new ResponseEntity<>("Both start and end date must be selected",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Both pick-up and return date must be selected",HttpStatus.BAD_REQUEST);
         }
 
+        if(fromDate.isBefore(minDate)){
+            return new ResponseEntity<>("Pick-up date must be minimum 48 hours from today.",HttpStatus.BAD_REQUEST);
+        }
+
+
         if(fromDate.isAfter(toDate)){
-            return new ResponseEntity<>("Start date cannot be after end date.",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Pick-up date cannot be after return date.",HttpStatus.BAD_REQUEST);
         }
 
         if(kmLimit<0){

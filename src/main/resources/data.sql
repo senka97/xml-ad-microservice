@@ -8,7 +8,7 @@ insert into ad (start_date, end_date, limit_km, cdw, car_id, price_list_id, loca
 insert into ad (start_date, end_date, limit_km, cdw, car_id, price_list_id, location, owner_id, visible) value ('2020-06-01','2020-06-30','0',true,2,1,'Novi Sad',2, true);
 insert into ad (start_date, end_date, limit_km, cdw, car_id, price_list_id, location, owner_id, visible) value ('2020-04-01','2020-04-30','0',false,3,2, 'Beograd',3, true);
 insert into ad (start_date, end_date, limit_km, cdw, car_id, price_list_id, location, owner_id, visible) value ('2020-06-03','2020-06-19','500',false,4,2, 'Beograd',3, true);
-insert into ad (start_date, end_date, limit_km, cdw, car_id, price_list_id, location, owner_id, visible) value ('2020-06-01','2020-06-30','700',false,5,5, 'Beograd',6, true);
+insert into ad (start_date, end_date, limit_km, cdw, car_id, price_list_id, location, owner_id, visible) value ('2020-06-01','2020-06-30','700',false,5,5, 'Novi Sad',6, true);
 insert into ad (start_date, end_date, limit_km, cdw, car_id, price_list_id, location, owner_id, visible) value ('2020-06-01','2020-06-18','0',false,6,5, 'Novi Sad',6, true);
 
 insert into user_can_post_comment ( user_id, ad_id, posted) value ( 3, 1, true);

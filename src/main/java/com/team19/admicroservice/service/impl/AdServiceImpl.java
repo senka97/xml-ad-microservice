@@ -36,6 +36,12 @@ public class AdServiceImpl implements AdService {
     @Autowired
     private UserClient userClient;
 
+
+    @Override
+    public Ad findById(Long id) {
+        return adRepository.findById(id).orElse(null);
+    }
+
     @Override
     public ArrayList<AdDTO> getAllAds()
     {

@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+
 @RestController
 @RequestMapping(value = "/api")
 public class UserCanPostCommentController {
@@ -22,18 +24,19 @@ public class UserCanPostCommentController {
        return  new ResponseEntity<>(this.userCanPostCommentService.canUserPostComment(adId, userId), HttpStatus.OK);
     }
 
-    @PutMapping(value = "/changeCanPostComment/{adId}/{userId}")
+    @PutMapping(value = "/userCanPostComment/{carId}/{userId}")
     @PreAuthorize("hasAuthority('comment_create')")
-    public Boolean changeCanPostComment(@PathVariable("adId") Long adId, @PathVariable("userId") Long userId)
+    public Boolean changeCanPostComment(@PathVariable("carId") Long carId, @PathVariable("userId") Long userId)
     {
-        return this.userCanPostCommentService.changeCanPostComment(adId,userId);
+        return this.userCanPostCommentService.changeCanPostComment(carId,userId);
     }
 
-    // ovo ce se pozivati kada korisnik zavrsi sa rentiranjem kola
-    @PostMapping(value = "/createCanPostComment/{adId}/{userId}")
-    @PreAuthorize("hasAuthority('comment_create')")
-    public ResponseEntity<?> createUserCanPostComment(@PathVariable("adId") Long adId, @PathVariable("userId") Long userId)
+    // ovo ce se pozivati kada se korisniku odobri zahtev
+    @PostMapping(value = "/userCanPostComment/{adId}/{uId}/{endDate}")
+   // @PreAuthorize("hasAuthority('comment_create')") agent kada prihvata zahtev nece imati ovu permisiju, a tada se poziva ova funkcija
+    public Boolean createUserCanPostComment(@PathVariable("adId") Long adId, @PathVariable("uId") Long userId, @PathVariable("endDate") String endDate)
     {
-        return new ResponseEntity<>(this.userCanPostCommentService.createUserCanPostComment(adId,userId), HttpStatus.CREATED);
+        LocalDate requestEndDate = LocalDate.parse(endDate);
+        return this.userCanPostCommentService.createUserCanPostComment(adId,userId,requestEndDate);
     }
 }

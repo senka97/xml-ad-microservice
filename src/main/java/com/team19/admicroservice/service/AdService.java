@@ -11,6 +11,7 @@ import java.util.List;
 
 public interface AdService {
 
+    Ad findById(Long id);
     ArrayList<AdDTO> getAllAds();
     AdDTO getAd(Long id);
     AdDTO postNewAd(AdDTO adDTO);

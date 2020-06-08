@@ -1,5 +1,6 @@
 package com.team19.admicroservice.service.impl;
 
+import com.team19.admicroservice.model.Ad;
 import com.team19.admicroservice.model.UserCanPostComment;
 import com.team19.admicroservice.repository.UserCanPostCommentRepository;
 import com.team19.admicroservice.service.UserCanPostCommentService;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.jws.soap.SOAPBinding;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 @Service
@@ -15,22 +17,34 @@ public class UserCanPostCommentServiceImpl implements UserCanPostCommentService 
     @Autowired
     private UserCanPostCommentRepository userCanPostCommentRepository;
 
+    @Autowired
+    private AdServiceImpl adService;
+
     @Override
     public Boolean canUserPostComment(Long adId, Long userId) {
 
-        ArrayList<UserCanPostComment> list = this.userCanPostCommentRepository.findOut(adId, userId, false);
+        Ad ad = adService.findById(adId);
 
-        if(list.isEmpty())
+        if(ad != null)
         {
-            return false;
+            LocalDate today = LocalDate.now();
+            ArrayList<UserCanPostComment> list = this.userCanPostCommentRepository.findOut(ad.getCarId(), userId, false, today);
+            // moci ce da okaci komentar samo ako ga nije vec okacio i ako je iznajmljivanje zavrseno (endDate zahteva manji od danas)
+            if(list.isEmpty())
+            {
+                return false;
+            }
+            else return true;
         }
-        else return true;
+        else return false;
+
     }
 
     @Override
-    public Boolean changeCanPostComment(Long adId, Long userId) {
+    public Boolean changeCanPostComment(Long carId, Long userId) {
 
-        ArrayList<UserCanPostComment> list = this.userCanPostCommentRepository.findOut(adId, userId, false);
+        LocalDate today = LocalDate.now();
+        ArrayList<UserCanPostComment> list = this.userCanPostCommentRepository.findOut(carId, userId, false, today);
 
         if(!list.isEmpty())
         {
@@ -44,14 +58,23 @@ public class UserCanPostCommentServiceImpl implements UserCanPostCommentService 
     }
 
     @Override
-    public UserCanPostComment createUserCanPostComment(Long adId, Long userId) {
+    public Boolean createUserCanPostComment(Long adId, Long userId, LocalDate requestEndDate) {
 
-        UserCanPostComment ucpc = new UserCanPostComment();
+        Ad ad = adService.findById(adId);
 
-        ucpc.setAdId(adId);
-        ucpc.setUserId(userId);
-        ucpc.setPosted(false);
+        if(ad != null)
+        {
+            UserCanPostComment ucpc = new UserCanPostComment();
 
-        return this.userCanPostCommentRepository.save(ucpc);
+            ucpc.setCarId(ad.getCarId());
+            ucpc.setUserId(userId);
+            ucpc.setRequestEndDate(requestEndDate);
+            ucpc.setPosted(false);
+
+            this.userCanPostCommentRepository.save(ucpc);
+            return true;
+        }
+        else return false;
+
     }
 }

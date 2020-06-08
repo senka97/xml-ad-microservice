@@ -11,21 +11,9 @@ insert into ad (start_date, end_date, limit_km, cdw, car_id, price_list_id, loca
 insert into ad (start_date, end_date, limit_km, cdw, car_id, price_list_id, location, owner_id, visible) value ('2020-06-01','2020-06-30','700',false,5,5, 'Novi Sad',6, true);
 insert into ad (start_date, end_date, limit_km, cdw, car_id, price_list_id, location, owner_id, visible) value ('2020-06-01','2020-06-18','0',false,6,5, 'Novi Sad',6, true);
 
-insert into user_can_post_comment ( user_id, ad_id, posted) value ( 3, 1, true);
-insert into user_can_post_comment ( user_id, ad_id, posted) value ( 3, 1, false);
-insert into user_can_post_comment ( user_id, ad_id, posted) value ( 3, 2, true);
-insert into user_can_post_comment ( user_id, ad_id, posted) value ( 3, 2, true);
-insert into user_can_post_comment ( user_id, ad_id, posted) value ( 3, 5, true);
-insert into user_can_post_comment ( user_id, ad_id, posted) value ( 3, 5, false);
-insert into user_can_post_comment ( user_id, ad_id, posted) value ( 3, 6, true);
-insert into user_can_post_comment ( user_id, ad_id, posted) value ( 3, 6, true);
+insert into user_can_post_comment ( user_id, car_id, posted, request_end_date) value ( 3, 1, false, '2020-06-05');
+insert into user_can_post_comment ( user_id, car_id, posted, request_end_date) value ( 3, 5, false, '2020-06-30');
+insert into user_can_post_comment ( user_id, car_id, posted, request_end_date) value ( 5, 1, false, '2020-06-20');
+insert into user_can_post_comment ( user_id, car_id, posted, request_end_date) value ( 5, 2, false, '2020-06-06');
 
-insert into user_can_post_comment ( user_id, ad_id, posted) value ( 5, 1, true);
-insert into user_can_post_comment ( user_id, ad_id, posted) value ( 5, 2, true);
-insert into user_can_post_comment ( user_id, ad_id, posted) value ( 5, 1, false);
-insert into user_can_post_comment ( user_id, ad_id, posted) value ( 5, 2, false);
-insert into user_can_post_comment ( user_id, ad_id, posted) value ( 5, 3, true);
-insert into user_can_post_comment ( user_id, ad_id, posted) value ( 5, 3, true);
-insert into user_can_post_comment ( user_id, ad_id, posted) value ( 5, 4, true);
-insert into user_can_post_comment ( user_id, ad_id, posted) value ( 5, 4, true);
 

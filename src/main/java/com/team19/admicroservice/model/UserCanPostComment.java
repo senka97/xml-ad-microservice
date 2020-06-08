@@ -2,6 +2,7 @@ package com.team19.admicroservice.model;
 
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 public class UserCanPostComment {
@@ -13,11 +14,14 @@ public class UserCanPostComment {
     @Column(name="user_id")
     private Long userId;
 
-    @Column(name="ad_id")
-    private Long adId;
+    @Column(name="car_id")
+    private Long carId;
 
     @Column(name="posted")
     private Boolean posted;
+
+    @Column(name="request_end_date")
+    private LocalDate requestEndDate;
 
     public UserCanPostComment()
     {
@@ -40,12 +44,12 @@ public class UserCanPostComment {
         this.userId = userId;
     }
 
-    public Long getAdId() {
-        return adId;
+    public Long getCarId() {
+        return carId;
     }
 
-    public void setAdId(Long adId) {
-        this.adId = adId;
+    public void setCarId(Long carId) {
+        this.carId = carId;
     }
 
     public Boolean getPosted() {
@@ -54,5 +58,13 @@ public class UserCanPostComment {
 
     public void setPosted(Boolean posted) {
         this.posted = posted;
+    }
+
+    public LocalDate getRequestEndDate() {
+        return requestEndDate;
+    }
+
+    public void setRequestEndDate(LocalDate requestEndDate) {
+        this.requestEndDate = requestEndDate;
     }
 }

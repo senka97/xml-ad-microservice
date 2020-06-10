@@ -113,13 +113,13 @@ public class AdController {
         return adService.getAdSimple(id);
     }
 
-    @PutMapping(value = "/ad/block/client/{id}")
+    @PutMapping(value = "/ad/client/{id}/blocked")
     public ResponseEntity<?> hideAdsForBlockedClient(@PathVariable("id") Long id) {
         adService.hideAdsForBlockedClient(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping(value = "/ad/activate/client/{id}")
+    @PutMapping(value = "/ad/client/{id}/active")
     public ResponseEntity<?> showAdsForActiveClient(@PathVariable("id") Long id) {
         adService.showAdsForActiveClient(id);
         return new ResponseEntity<>(HttpStatus.OK);

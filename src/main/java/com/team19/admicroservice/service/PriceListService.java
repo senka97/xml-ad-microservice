@@ -12,4 +12,6 @@ public interface PriceListService {
     ArrayList<PriceListDTO> getPriceListsFromUser();
     PriceList findById(Long id);
     List<PriceListAdDTO> findPriceLists(List<PriceListAdDTO> priceListAdDTOs);
+    PriceList save(PriceList priceList);
+
 }

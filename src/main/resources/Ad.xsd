@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"  targetNamespace="http://www.rent-a-car.com/ad-service/soap" xmlns:tns="http://www.rent-a-car.com/ad-service/soap" >
+    <xs:element name="postAdRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element type="xs:long" name="ownerId"/>
+                <xs:element type="xs:string" name="startDate"/>
+                <xs:element type="xs:string" name="endDate"/>
+                <xs:element type="xs:int" name="limitKm"/>
+                <xs:element type="xs:boolean" name="cdw"/>
+                <xs:element type="xs:string" name="location"/>
+                <xs:element name="priceList" type="tns:priceList" />
+                <xs:element name="car" type="tns:car"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="postAdResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element type="xs:long" name="idAd"/>
+                <xs:element type="xs:long" name="idCar"/>
+                <xs:element type="xs:long" name="idPriceList"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType  name="car">
+        <xs:sequence>
+            <xs:element type="xs:long" name="id"/>
+            <xs:element type="xs:int" name="childrenSeats"/>
+            <xs:element type="xs:double" name="rate"/>
+            <xs:element type="xs:double" name="mileage"/>
+            <xs:element type="xs:boolean" name="hasAndroidApp"/>
+            <xs:element type="xs:string" name="carBrand"/>
+            <xs:element type="xs:string" name="carModel"/>
+            <xs:element type="xs:string" name="carClass"/>
+            <xs:element type="xs:string" name="transType"/>
+            <xs:element type="xs:string" name="feulType"/>
+            <xs:element type="xs:string" name="photos64" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="priceList">
+        <xs:sequence>
+            <xs:element type="xs:long" name="id"/>
+            <xs:element type="xs:double" name="pricePerKm"/>
+            <xs:element type="xs:double" name="pricePerDay"/>
+            <xs:element type="xs:int" name="discount20Days"/>
+            <xs:element type="xs:int" name="discount30Days"/>
+            <xs:element type="xs:string" name="alias"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

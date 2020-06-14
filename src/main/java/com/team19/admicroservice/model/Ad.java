@@ -34,7 +34,7 @@ public class Ad {
     @Column(name = "visible")
     private boolean visible;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private PriceList priceList;
 
     public Ad()

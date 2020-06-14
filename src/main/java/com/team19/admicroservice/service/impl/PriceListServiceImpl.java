@@ -58,4 +58,9 @@ public class PriceListServiceImpl implements PriceListService {
         }
         return priceListAdDTOs;
     }
+
+    @Override
+    public PriceList save(PriceList priceList) {
+        return priceListRepository.save(priceList);
+    }
 }

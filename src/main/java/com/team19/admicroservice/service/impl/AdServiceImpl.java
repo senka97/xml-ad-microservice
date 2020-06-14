@@ -131,27 +131,35 @@ public class AdServiceImpl implements AdService {
 
     @Override
     public AdDTO postNewAd(AdDTO adDTO) {
+        System.out.println("posting1");
         CarDTO car = new CarDTO();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CustomPrincipal cp = (CustomPrincipal) auth.getPrincipal();
-
+        System.out.println("posting2"+cp.getUserID());
         //Uzimam usera iz user servica da vidim da li je client ako jeste proveravam koliko ima aktivnih oglasa
         //Ako ima vise od 3 ne moze da postavi oglas
-        if(userClient.user(cp.getPermissions(),cp.getUserID(),cp.getToken()).getRole().equals("ROLE_CLIENT")){
+        if (userClient.user(cp.getPermissions(), cp.getUserID(), cp.getToken()).getRole().equals("ROLE_CLIENT")) {
             System.out.println(getActiveAdsOfUser(Long.parseLong(cp.getUserID())).size());
-            if(getActiveAdsOfUser(Long.parseLong(cp.getUserID())).size()>=3){
+            if (getActiveAdsOfUser(Long.parseLong(cp.getUserID())).size() >= 3) {
                 return null;
             }
+            adDTO.setOwnerId(Long.parseLong(cp.getUserID()));
         }
 
-        if(adDTO.getCar().getId() == null){
+        System.out.println("posting3");
+
+        if (adDTO.getCar().getId() == null) {
             //ako je izabran novi auto salje zahtev na car client za kreiranje novog auta
-            car = carClient.addCar(adDTO.getCar(), cp.getPermissions(),cp.getUserID(),cp.getToken());
-        }else{
+             auth = SecurityContextHolder.getContext().getAuthentication();
+             cp = (CustomPrincipal) auth.getPrincipal();
+             car = carClient.addCar(adDTO.getCar(), cp.getPermissions(), cp.getUserID(), cp.getToken());
+        } else {
             //ako je izabran postojeci auto koji nema aktivan oglas onda se salje get zahtev car clijentu za taj auto
-            car =carClient.getCar(adDTO.getCar().getId());
-        }
+            System.out.println("posting4");
 
+            car = carClient.getCar(adDTO.getCar().getId());
+        }
+        System.out.println("posting5");
         Ad newAd = new Ad();
         newAd.setCarId(car.getId());
         newAd.setCdw(adDTO.isCdw());
@@ -160,11 +168,22 @@ public class AdServiceImpl implements AdService {
         newAd.setLimitKm(adDTO.getLimitKm());
         newAd.setLocation(adDTO.getLocation());
         newAd.setOwnerId(Long.parseLong(cp.getUserID()));
-        newAd.setPriceList(priceListService.findById(adDTO.getPriceList().getId()));
+        System.out.println("posting6");
+        PriceList priceList = priceListService.findById(adDTO.getPriceList().getId());
+        System.out.println(priceList.getId());
+        newAd.setPriceList(priceList);
         newAd.setVisible(true);
+        System.out.println("posting");
         newAd=adRepository.save(newAd);
 
         adDTO.setId(newAd.getId());
+        CarDTO carDTO = new CarDTO();
+        carDTO.setId(newAd.getCarId());
+        PriceListDTO plDTO = new PriceListDTO();
+        plDTO.setId(newAd.getPriceList().getId());
+        adDTO.setCar(carDTO);
+        adDTO.setPriceList(plDTO);
+
         return adDTO;
     }
 

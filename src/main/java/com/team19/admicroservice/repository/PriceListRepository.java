@@ -7,4 +7,5 @@ import java.util.ArrayList;
 
 public interface PriceListRepository extends JpaRepository<PriceList, Long> {
     ArrayList<PriceList> findAllByOwnerId(Long id);
+
 }

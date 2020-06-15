@@ -63,4 +63,22 @@ public class PriceListServiceImpl implements PriceListService {
     public PriceList save(PriceList priceList) {
         return priceListRepository.save(priceList);
     }
+
+    @Override
+    public PriceListAdDTO getPriceListForAd(Long id) {
+
+        Ad ad = adRepository.findById(id).orElse(null);
+
+        if(ad != null)
+        {
+            PriceListAdDTO pl = new PriceListAdDTO();
+            pl.setPricePerDay(ad.getPriceList().getPricePerDay());
+            pl.setPricePerKm(ad.getPriceList().getPricePerKm());
+            pl.setDiscount20Days(ad.getPriceList().getDiscount20Days());
+            pl.setDiscount30Days(ad.getPriceList().getDiscount30Days());
+            pl.setAdID(ad.getId());
+            return pl;
+        }
+        return null;
+    }
 }

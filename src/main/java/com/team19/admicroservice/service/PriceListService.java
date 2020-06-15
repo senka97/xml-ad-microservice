@@ -13,5 +13,6 @@ public interface PriceListService {
     PriceList findById(Long id);
     List<PriceListAdDTO> findPriceLists(List<PriceListAdDTO> priceListAdDTOs);
     PriceList save(PriceList priceList);
+    PriceListAdDTO getPriceListForAd(Long id);
 
 }

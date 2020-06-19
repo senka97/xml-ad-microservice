@@ -27,4 +27,8 @@ public interface CarClient {
                                  @PathVariable("feul_type") String feulType,@PathVariable("class_type") String classType,
                                  @PathVariable("transmission_type") String transType,@PathVariable("mileage") int mileage,
                                  @PathVariable("children_seats") int childrenSeats);
+
+    @PutMapping(value="api/car/{id}/mileage")
+    Boolean changeCarMileageAfterReport(@PathVariable("id") Long carId, @RequestBody double mileage,@RequestHeader("permissions") String permissions,
+                                        @RequestHeader("userID") String userId, @RequestHeader("Authorization") String token);
 }

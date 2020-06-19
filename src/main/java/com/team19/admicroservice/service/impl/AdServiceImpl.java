@@ -381,4 +381,25 @@ public class AdServiceImpl implements AdService {
         return this.adRepository.findActiveAdsWithThisPriceList(id, LocalDate.now());
     }
 
+    @Override
+    public Boolean changeMileageAfterReport(Long adId, double mileage) {
+
+        Ad ad = adRepository.findById(adId).orElse(null);
+
+        // TODO proveriti da li je oglas unlimited ili ne, pa ako je prekoracio kilometre da se dodatno naplati
+
+        if(ad != null)
+        {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            CustomPrincipal cp = (CustomPrincipal) auth.getPrincipal();
+
+            if(this.carClient.changeCarMileageAfterReport(ad.getCarId(), mileage, cp.getPermissions(), cp.getUserID(), cp.getToken()))
+            {
+                return true;
+            }
+            else return false;
+        }
+        else return false;
+
+    }
 }

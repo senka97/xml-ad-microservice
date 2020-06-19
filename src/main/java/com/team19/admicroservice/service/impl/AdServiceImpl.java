@@ -375,4 +375,10 @@ public class AdServiceImpl implements AdService {
         return adDTOS;
     }
 
+    @Override
+    public List<Ad> findActiveAdsForThisPriceList(Long id, LocalDate now) {
+
+        return this.adRepository.findActiveAdsWithThisPriceList(id, LocalDate.now());
+    }
+
 }

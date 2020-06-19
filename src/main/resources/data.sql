@@ -1,8 +1,8 @@
-insert into price_list (alias, discount20Days, discount30Days, price_per_day, price_per_km,owner_id) value ('Price list - agent 1', 0, 15, 25, 3, 2);
-insert into price_list (alias, discount20Days, discount30Days, price_per_day, price_per_km,owner_id) value ('Price list - client 1', 10, 15, 30, 4, 3);
-insert into price_list (alias, discount20Days, discount30Days, price_per_day, price_per_km,owner_id) value ('Price list - client 2', 15, 20, 30, 3, 4);
-insert into price_list (alias, discount20Days, discount30Days, price_per_day, price_per_km,owner_id) value ('Price list - client 3', 0, 0, 30, 5, 5);
-insert into price_list (alias, discount20Days, discount30Days, price_per_day, price_per_km,owner_id) value ('Price list - agent 2', 15, 20, 30, 4, 6);
+insert into price_list (alias, discount20Days, discount30Days, price_per_day, price_per_km, price_for_cdw, owner_id, removed) value ('Price list - agent 1', 0, 15, 25, 3, 100, 2, false);
+insert into price_list (alias, discount20Days, discount30Days, price_per_day, price_per_km, price_for_cdw, owner_id, removed) value ('Price list - client 1', 10, 15, 30, 4, 150, 3, false);
+insert into price_list (alias, discount20Days, discount30Days, price_per_day, price_per_km, price_for_cdw, owner_id, removed) value ('Price list - client 2', 15, 20, 30, 130, 3, 4, false);
+insert into price_list (alias, discount20Days, discount30Days, price_per_day, price_per_km, price_for_cdw, owner_id, removed) value ('Price list - client 3', 0, 0, 30, 5, 240, 5, false);
+insert into price_list (alias, discount20Days, discount30Days, price_per_day, price_per_km, price_for_cdw, owner_id, removed) value ('Price list - agent 2', 15, 20, 30, 4, 70,  6, false);
 
 insert into ad (start_date, end_date, limit_km, cdw, car_id, price_list_id, location, owner_id, visible) value ('2020-06-01','2020-06-25','0',false,1,1,'Novi Sad',2, true);
 insert into ad (start_date, end_date, limit_km, cdw, car_id, price_list_id, location, owner_id, visible) value ('2020-06-01','2020-06-30','0',true,2,1,'Novi Sad',2, true);

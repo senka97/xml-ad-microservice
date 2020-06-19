@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.ArrayList;
 
 public interface PriceListRepository extends JpaRepository<PriceList, Long> {
-    ArrayList<PriceList> findAllByOwnerId(Long id);
+
+    ArrayList<PriceList> findAllByOwnerIdAndRemoved(Long id, boolean removed);
+    PriceList findByAliasAndOwnerIdAndRemoved(String alias, Long id, boolean removed);
 
 }

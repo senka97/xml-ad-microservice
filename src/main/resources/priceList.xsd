@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"  targetNamespace="http://www.rent-a-car.com/ad-service/soap" xmlns:tns="http://www.rent-a-car.com/ad-service/soap" >
+
+    <xs:element name="addPriceListRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element type="xs:string" name="alias"/>
+                <xs:element type="xs:double" name="pricePerDay"/>
+                <xs:element type="xs:double" name="pricePerKm"/>
+                <xs:element type="xs:double" name="priceForCdw"/>
+                <xs:element type="xs:int" name="discount20Days"/>
+                <xs:element type="xs:int" name="discount30Days"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="addPriceListResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element type="xs:boolean" name="success"/>
+                <xs:element type="xs:string" name="message"/>
+                <xs:element type="xs:long" name="mainId"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="deletePriceListRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element type="xs:long" name="mainId"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="deletePriceListResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element type="xs:boolean" name="success"/>
+                <xs:element type="xs:string" name="message"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+
+</xs:schema>

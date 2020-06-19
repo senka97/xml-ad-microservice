@@ -11,4 +11,8 @@ public interface UserClient {
     UserDTO user(@RequestHeader("permissions") String permissions,
                  @RequestHeader("userID") String userId, @RequestHeader("Authorization") String token);
 
+    @GetMapping(value = "client/{id}")
+    boolean checkClientCanComment(@PathVariable Long id, @RequestHeader("permissions") String permissions,
+                                  @RequestHeader("userID") String userId, @RequestHeader("Authorization") String token);
+
 }

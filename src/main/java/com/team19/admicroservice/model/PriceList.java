@@ -1,6 +1,10 @@
 package com.team19.admicroservice.model;
 
+import com.rent_a_car.ad_service.soap.AddPriceListRequest;
+import com.team19.admicroservice.dto.PriceListRequestDTO;
+
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -19,14 +23,20 @@ public class PriceList {
     @Column(name="pricePerDay")
     private double pricePerDay;
 
+    @Column(name="priceForCdw")
+    private double priceForCdw;
+
     @Column(name="discount20Days")
     private int discount20Days;
 
     @Column(name="discount30Days")
     private int discount30Days;
 
-    @Column(name="alias", unique = true)
+    @Column(name="alias")
     private String alias;
+
+    @Column(name="removed")
+    private boolean removed;
 
     @OneToMany(mappedBy = "priceList", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Ad> ads;
@@ -34,6 +44,30 @@ public class PriceList {
     public PriceList()
     {
 
+    }
+
+    public PriceList(PriceListRequestDTO plr, Long ownerId){
+        this.alias = plr.getAlias();
+        this.pricePerDay = plr.getPricePerDay();
+        this.pricePerKm = plr.getPricePerKm();
+        this.priceForCdw = plr.getPriceForCdw();
+        this.discount20Days = plr.getDiscount20Days();
+        this.discount30Days = plr.getDiscount30Days();
+        this.ownerId = ownerId;
+        this.removed = false;
+        this.ads = new HashSet<>();
+    }
+
+    public PriceList(AddPriceListRequest apr, Long ownerId){
+        this.alias = apr.getAlias();
+        this.pricePerDay = apr.getPricePerDay();
+        this.pricePerKm = apr.getPricePerKm();
+        this.priceForCdw = apr.getPriceForCdw();
+        this.discount20Days = apr.getDiscount20Days();
+        this.discount30Days = apr.getDiscount30Days();
+        this.ownerId = ownerId;
+        this.removed = false;
+        this.ads = new HashSet<>();
     }
 
     public Long getId() {
@@ -98,5 +132,21 @@ public class PriceList {
 
     public void setOwnerId(Long ownerId) {
         this.ownerId = ownerId;
+    }
+
+    public double getPriceForCdw() {
+        return priceForCdw;
+    }
+
+    public void setPriceForCdw(double priceForCdw) {
+        this.priceForCdw = priceForCdw;
+    }
+
+    public boolean isRemoved() {
+        return removed;
+    }
+
+    public void setRemoved(boolean removed) {
+        this.removed = removed;
     }
 }

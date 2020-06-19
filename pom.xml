@@ -105,6 +105,7 @@
                 <configuration>
                     <sources>
                         <source>${project.basedir}/src/main/resources/Ad.xsd</source>
+                        <source>${project.basedir}/src/main/resources/priceList.xsd</source>
                     </sources>
                 </configuration>
             </plugin>

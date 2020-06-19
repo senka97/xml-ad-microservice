@@ -25,4 +25,5 @@ public interface AdService {
     List<AdFrontDTO> fillAdsWithInformation(List<Long> adIDs);
     ArrayList<AdDTO> simpleSerach(LocalDate fromDate,LocalDate toDate,String location);
     ArrayList<AdDTO> extendedSearch(LocalDate fromDate,LocalDate toDate,String location,float priceFrom,float priceTo,int kmLimit,boolean cdw);
+    List<Ad> findActiveAdsForThisPriceList(Long id, LocalDate now);
 }

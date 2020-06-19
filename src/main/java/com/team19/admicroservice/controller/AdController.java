@@ -132,6 +132,13 @@ public class AdController {
           return this.adService.fillAdsWithInformation(adIDs);
     }
 
+    @PutMapping(value="/ad/{id}/car")
+    @PreAuthorize("hasAuthority('car_update')")
+    public Boolean changeMileageAfterReport(@PathVariable("id") Long adId, @RequestBody double mileage)
+    {
+        return this.adService.changeMileageAfterReport(adId,mileage);
+    }
+
     @GetMapping(value="/ad/{from_date}/{to_date}/{location}", produces = "application/json")
     public ResponseEntity<?> simpleSearch(@PathVariable("from_date") String fromDateString,@PathVariable("to_date") String toDateString,@PathVariable("location") String location)  {
         System.out.println("Searching");

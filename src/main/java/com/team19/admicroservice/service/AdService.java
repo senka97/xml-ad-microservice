@@ -26,4 +26,5 @@ public interface AdService {
     ArrayList<AdDTO> simpleSerach(LocalDate fromDate,LocalDate toDate,String location);
     ArrayList<AdDTO> extendedSearch(LocalDate fromDate,LocalDate toDate,String location,float priceFrom,float priceTo,int kmLimit,boolean cdw);
     List<Ad> findActiveAdsForThisPriceList(Long id, LocalDate now);
+    Boolean changeMileageAfterReport(Long adId, double mileage);
 }

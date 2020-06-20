@@ -46,6 +46,7 @@
             <xs:element type="xs:long" name="id"/>
             <xs:element type="xs:double" name="pricePerKm"/>
             <xs:element type="xs:double" name="pricePerDay"/>
+            <xs:element type="xs:double" name="priceForCdw"/>
             <xs:element type="xs:int" name="discount20Days"/>
             <xs:element type="xs:int" name="discount30Days"/>
             <xs:element type="xs:string" name="alias"/>

@@ -78,6 +78,7 @@ public class AdEndPont {
             priceList.setPricePerDay(request.getPriceList().getPricePerDay());
             priceList.setPricePerKm(request.getPriceList().getPricePerKm());
             priceList.setOwnerId(Long.parseLong(cp.getUserID()));
+            priceList.setPriceForCdw(request.getPriceList().getPriceForCdw());
             priceList = priceListService.save(priceList);
 
             PriceListDTO priceListDTO = new PriceListDTO();
@@ -105,6 +106,7 @@ public class AdEndPont {
         carDTO.setMileage(request.getCar().getMileage());
         carDTO.setTransType(request.getCar().getTransType().replace("_"," "));
         carDTO.setPhotos64(new ArrayList<>());
+        carDTO.setRate(request.getCar().getRate());
         for(String img: request.getCar().getPhotos64()){
             System.out.println("Slika: "+img);
             carDTO.getPhotos64().add(img);

@@ -17,7 +17,7 @@ public class UserCanRateController {
     private UserCanRateServiceImpl userCanRateService;
 
     @GetMapping(value= "/user/{userId}/ad/{adId}")
-    @PreAuthorize("hasAuthority('user_can_rate')")
+    @PreAuthorize("hasAuthority('rate_create')")
     public ResponseEntity<?> canRate(@PathVariable("userId") Long userId, @PathVariable("adId") Long adId) {
         return new ResponseEntity<>(userCanRateService.canRate(userId, adId), HttpStatus.OK);
     }
@@ -29,7 +29,7 @@ public class UserCanRateController {
     }
 
     @PutMapping(value = "/user/{userId}/car/{carId}")
-   // @PreAuthorize("hasAuthority('rating_status')")
+    @PreAuthorize("hasAuthority('rate_update')")
     public boolean changeCanRate(@PathVariable("userId") Long userId, @PathVariable("carId") Long carId) {
         return userCanRateService.changeCanRate(userId, carId);
     }

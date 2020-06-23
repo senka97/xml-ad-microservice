@@ -3,6 +3,8 @@ package com.team19.admicroservice.controller;
 import com.team19.admicroservice.client.CarClient;
 import com.team19.admicroservice.dto.*;
 import com.team19.admicroservice.service.impl.AdServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,8 @@ public class AdController {
     @Autowired
     private CarClient carClient;
 
+    Logger logger = LoggerFactory.getLogger(AdController.class);
+
     @GetMapping(value="/ads", produces = "application/json")
     //posto ova metoda vise nece trebati, moze se dopuniti i iskoristiti kada se budu dobavljali oglasi za jednog korisnika npr
     public ResponseEntity<?> getAllAds()  {
@@ -34,6 +38,7 @@ public class AdController {
     @GetMapping(value="/ads/{id}", produces = "application/json")
     public ResponseEntity<?> getAd(@PathVariable("id") Long id)  {
 
+            logger.info("get ad:" + id);
             return new ResponseEntity<>(adService.getAd(id), HttpStatus.OK);
 
     }

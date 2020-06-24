@@ -9,6 +9,8 @@ import com.team19.admicroservice.repository.AdRepository;
 import com.team19.admicroservice.security.CustomPrincipal;
 import com.team19.admicroservice.service.AdService;
 import com.team19.admicroservice.service.PriceListService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,6 +38,7 @@ public class AdServiceImpl implements AdService {
     @Autowired
     private UserClient userClient;
 
+    Logger logger = LoggerFactory.getLogger(AdServiceImpl.class);
 
     @Override
     public Ad findById(Long id) {
@@ -131,11 +134,11 @@ public class AdServiceImpl implements AdService {
 
     @Override
     public AdDTO postNewAd(AdDTO adDTO) {
-        System.out.println("posting1");
+
         CarDTO car = new CarDTO();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CustomPrincipal cp = (CustomPrincipal) auth.getPrincipal();
-        System.out.println("posting2"+cp.getUserID());
+
         //Uzimam usera iz user servica da vidim da li je client ako jeste proveravam koliko ima aktivnih oglasa
         //Ako ima vise od 3 ne moze da postavi oglas
         if (userClient.user(cp.getPermissions(), cp.getUserID(), cp.getToken()).getRole().equals("ROLE_CLIENT")) {
@@ -146,20 +149,23 @@ public class AdServiceImpl implements AdService {
             adDTO.setOwnerId(Long.parseLong(cp.getUserID()));
         }
 
-        System.out.println("posting3");
 
         if (adDTO.getCar().getId() == null) {
             //ako je izabran novi auto salje zahtev na car client za kreiranje novog auta
              auth = SecurityContextHolder.getContext().getAuthentication();
              cp = (CustomPrincipal) auth.getPrincipal();
-             car = carClient.addCar(adDTO.getCar(), cp.getPermissions(), cp.getUserID(), cp.getToken());
+            logger.debug("CS-call-S:AC"); //car service call start add car
+            car = carClient.addCar(adDTO.getCar(), cp.getPermissions(), cp.getUserID(), cp.getToken());
+            logger.debug("CS-call-E:AC"); //car service call end add car
         } else {
             //ako je izabran postojeci auto koji nema aktivan oglas onda se salje get zahtev car clijentu za taj auto
-            System.out.println("posting4");
-
+            logger.debug("CS-call-S:GC"); //car service call start get car
             car = carClient.getCar(adDTO.getCar().getId());
+            logger.debug("CS-call-E:GC"); //car service call end get car
+
+
         }
-        System.out.println("posting5");
+
         Ad newAd = new Ad();
         newAd.setCarId(car.getId());
         newAd.setCdw(adDTO.isCdw());
@@ -168,12 +174,12 @@ public class AdServiceImpl implements AdService {
         newAd.setLimitKm(adDTO.getLimitKm());
         newAd.setLocation(adDTO.getLocation());
         newAd.setOwnerId(Long.parseLong(cp.getUserID()));
-        System.out.println("posting6");
+
         PriceList priceList = priceListService.findById(adDTO.getPriceList().getId());
         System.out.println(priceList.getId());
         newAd.setPriceList(priceList);
         newAd.setVisible(true);
-        System.out.println("posting");
+
         newAd=adRepository.save(newAd);
 
         adDTO.setId(newAd.getId());

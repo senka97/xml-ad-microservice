@@ -2,6 +2,7 @@ package com.team19.admicroservice.controller;
 
 import com.team19.admicroservice.client.CarClient;
 import com.team19.admicroservice.dto.*;
+import com.team19.admicroservice.security.CustomPrincipal;
 import com.team19.admicroservice.service.impl.AdServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,8 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,48 +57,63 @@ public class AdController {
     @PostMapping(value = "/ad", consumes="application/json")
     public ResponseEntity<?> postAd(@RequestBody AdDTO adDTO){
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomPrincipal cp = (CustomPrincipal) auth.getPrincipal();
+
+
         if(adDTO.getCar().getCarModel() == null || adDTO.getCar().getCarClass() == null || adDTO.getCar().getFuelType() == null || adDTO.getCar().getTransType() == null){
+            logger.warn(MessageFormat.format("NAd-invalid:ad info missing;UserID:{0}", cp.getUserID()));
             return new ResponseEntity<>("All information about car must be entered!",HttpStatus.BAD_REQUEST);
         }
 
         if(adDTO.getStartDate() == null || adDTO.getEndDate() == null){
+            logger.warn(MessageFormat.format("NAd-invalid:dates missing;UserID:{0}", cp.getUserID()));
             return new ResponseEntity<>("Both start and end date must be selected",HttpStatus.BAD_REQUEST);
         }
 
         if(adDTO.getEndDate().isBefore(adDTO.getStartDate())){
+            logger.warn(MessageFormat.format("NAd-invalid:date order;UserID:{0}", cp.getUserID()));
             return new ResponseEntity<>("Start date must be before end date!",HttpStatus.BAD_REQUEST);
         }
 
         if(adDTO.getPriceList().getId() == null){
+            logger.warn(MessageFormat.format("NAd-invalid:price list missing;UserID:{0}", cp.getUserID()));
             return new ResponseEntity<>("Price list must be selected!",HttpStatus.BAD_REQUEST);
         }
 
         if(adDTO.getLimitKm() < 0){
+            logger.warn(MessageFormat.format("NAd-invalid:km limit less than 0;UserID:{0}", cp.getUserID()));
             return new ResponseEntity<>("Kilometer limit cannot be negative!",HttpStatus.BAD_REQUEST);
         }
 
         if(adDTO.getCar().getMileage() < 0){
+            logger.warn(MessageFormat.format("NAd-invalid:mileage less than 0;UserID:{0}", cp.getUserID()));
             return new ResponseEntity<>("Mileage must be greater or equal to 0",HttpStatus.BAD_REQUEST);
         }
 
         if(adDTO.getCar().getChildrenSeats() < 0){
+            logger.warn(MessageFormat.format("NAd-invalid:seats less than 0;UserID:{0}", cp.getUserID()));
             return new ResponseEntity<>("Number of seats must be greater or equal to 0",HttpStatus.BAD_REQUEST);
         }
 
         if(adDTO.getCar().getChildrenSeats() > 4){
+            logger.warn(MessageFormat.format("NAd-invalid:seats greater than 4;UserID:{0}", cp.getUserID()));
             return new ResponseEntity<>("Number of seats must be lower than 5",HttpStatus.BAD_REQUEST);
         }
 
         if(adDTO.getCar().getPhotos64().size() > 4){
+            logger.warn(MessageFormat.format("NAd-invalid:photos greater than 4;UserID:{0}", cp.getUserID()));
             return new ResponseEntity<>("You cant ad more than 4 photos!",HttpStatus.BAD_REQUEST);
         }
         AdDTO newAd = adService.postNewAd(adDTO);
 
         //Ako servis vrati null znaci da ima vec maximum postavljenih oglasa
         if(newAd == null){
+            logger.warn(MessageFormat.format("NAd-invalid:max posted;UserID:{0}", cp.getUserID()));
             return new ResponseEntity<>("You already have the limit of 3 active ads!",HttpStatus.BAD_REQUEST);
         }
 
+        logger.info(MessageFormat.format("Ad-ID:{0}-created;UserID:{1}", newAd.getId(), cp.getUserID()));
         return new ResponseEntity<>(newAd,HttpStatus.CREATED);
     }
 
@@ -152,19 +171,25 @@ public class AdController {
         LocalDate minDate = LocalDate.now();
         minDate = minDate.plusDays(2);
 
+
+
         if(fromDate == null || toDate == null){
+            logger.warn("SSAd-invalid:date missing"); //SSAD- SIMPLE SEARCH AD
             return new ResponseEntity<>("Both pick-up and return date must be selected",HttpStatus.BAD_REQUEST);
         }
 
         if(fromDate.isBefore(minDate)){
+            logger.warn("SSAd-invalid:minimal date"); //SSAD- SIMPLE SEARCH AD
             return new ResponseEntity<>("Pick-up date must be minimum 48 hours from today.",HttpStatus.BAD_REQUEST);
         }
 
         if(fromDate.isAfter(toDate)){
+            logger.warn("SSAd-invalid:date order"); //SSAD- SIMPLE SEARCH AD
             return new ResponseEntity<>("Pick-up date cannot be after return date.",HttpStatus.BAD_REQUEST);
         }
 
         if(!location.matches("[a-zA-Z0-9 ]+$")){
+            logger.warn("SSAd-invalid:location"); //SSAD- SIMPLE SEARCH AD
             return new ResponseEntity<>("Location cannot contain special characters!",HttpStatus.BAD_REQUEST);
         }
 
@@ -172,7 +197,7 @@ public class AdController {
         System.out.println(toDate);
         System.out.println(location);
 
-
+        logger.info("SSAd:read"); //SSAD- SIMPLE SEARCH AD
         return  new ResponseEntity<>(adService.simpleSerach(fromDate,toDate,location),HttpStatus.OK);
     }
 
@@ -220,32 +245,40 @@ public class AdController {
         LocalDate minDate = LocalDate.now();
         minDate = minDate.plusDays(2);
 
+
         if(fromDate == null || toDate == null){
+            logger.warn("ESAd-invalid:date missing"); //ESAd- EXTENDED SEARCH AD
             return new ResponseEntity<>("Both pick-up and return date must be selected",HttpStatus.BAD_REQUEST);
         }
 
         if(fromDate.isBefore(minDate)){
+            logger.warn("ESAd-invalid:minimal date"); //ESAd- SIMPLE SEARCH AD
             return new ResponseEntity<>("Pick-up date must be minimum 48 hours from today.",HttpStatus.BAD_REQUEST);
         }
 
 
         if(fromDate.isAfter(toDate)){
+            logger.warn("ESAd-invalid:date order"); //ESAd- SIMPLE SEARCH AD
             return new ResponseEntity<>("Pick-up date cannot be after return date.",HttpStatus.BAD_REQUEST);
         }
 
         if(kmLimit<0){
+            logger.warn("ESAd-invalid:km limit less than 0"); //ESAd- SIMPLE SEARCH AD
             return new ResponseEntity<>("Limit cannot be lower than 0.",HttpStatus.BAD_REQUEST);
         }
 
         if(mileage<0){
+            logger.warn("ESAd-invalid:mileage less than 0"); //ESAd- SIMPLE SEARCH AD
             return new ResponseEntity<>("Mileage cannot be lower than 0.",HttpStatus.BAD_REQUEST);
         }
 
         if(childrenSeats<0){
+            logger.warn("ESAd-invalid:seats less than 0;UserID:{0}"); //ESAd- SIMPLE SEARCH AD
             return new ResponseEntity<>("Number of seats for children cannot be lower than 0.",HttpStatus.BAD_REQUEST);
         }
 
         if(!location.matches("[a-zA-Z0-9 ]+$")){
+            logger.warn("ESAd-invalid:location"); //ESAd- SIMPLE SEARCH AD
             return new ResponseEntity<>("Location cannot contain special characters!",HttpStatus.BAD_REQUEST);
         }
 
@@ -261,6 +294,8 @@ public class AdController {
         for (AdDTO adDTO : adDTOS) {
             adDTO.setCar(cars.stream().filter(o -> adDTO.getCar().getId().equals(o.getId())).findAny().orElse(null));
         }
+
+        logger.info("ESAd:read"); //ESAd- Extended SEARCH AD
         return new ResponseEntity(adDTOS, HttpStatus.OK);
     }
 

@@ -11,7 +11,12 @@ import com.team19.admicroservice.security.CustomPrincipal;
 import com.team19.admicroservice.service.impl.AdServiceImpl;
 
 import com.team19.admicroservice.service.impl.PriceListServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
@@ -19,6 +24,7 @@ import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -35,22 +41,87 @@ public class AdEndPont {
     @Autowired
     private PriceListServiceImpl priceListService;
 
+    Logger logger = LoggerFactory.getLogger(AdEndPont.class);
+
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "postAdRequest")
     @ResponsePayload
+    @PreAuthorize("hasAuthority('ad_create')")
     public PostAdResponse getTest(@RequestPayload PostAdRequest request) {
         System.out.println("Soap request");
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CustomPrincipal cp = (CustomPrincipal) auth.getPrincipal();
 
-        PostAdResponse response = new PostAdResponse();
-        System.out.println("0");
-        AdDTO newAdDTO = new AdDTO();
         LocalDate startDate = LocalDate.parse(request.getStartDate());
-                //Instant.ofEpochMilli(request.getStartDate().getMillisecond()).atZone(ZoneId.systemDefault()).toLocalDate();
 
         LocalDate endDate = LocalDate.parse(request.getEndDate());
-               // Instant.ofEpochMilli(request.getEndDate().getMillisecond()).atZone(ZoneId.systemDefault()).toLocalDate();
+
+        PostAdResponse response = new PostAdResponse();
+
+
+        if(request.getCar().getCarModel() == null || request.getCar().getCarClass() == null || request.getCar().getFeulType() == null || request.getCar().getTransType() == null){
+            logger.warn(MessageFormat.format("SRAd-invalid:ad info missing;UserID:{0}", cp.getUserID()));
+            response.setIdAd(0);
+            return response;
+            //return new ResponseEntity<>("All information about car must be entered!", HttpStatus.BAD_REQUEST);
+        }
+
+        if(request.getStartDate() == null || request.getEndDate() == null){
+            logger.warn(MessageFormat.format("SRAd-invalid:dates missing;UserID:{0}", cp.getUserID()));
+            response.setIdAd(0);
+            return response;
+            //return new ResponseEntity<>("Both start and end date must be selected",HttpStatus.BAD_REQUEST);
+        }
+
+        if(endDate.isBefore(startDate)){
+            logger.warn(MessageFormat.format("SRAd-invalid:date order;UserID:{0}", cp.getUserID()));
+            response.setIdAd(0);
+            return response;
+            //return new ResponseEntity<>("Start date must be before end date!",HttpStatus.BAD_REQUEST);
+        }
+
+        if(request.getLimitKm() < 0){
+            logger.warn(MessageFormat.format("SRAd-invalid:km limit less than 0;UserID:{0}", cp.getUserID()));
+            response.setIdAd(0);
+            return response;
+           // return new ResponseEntity<>("Kilometer limit cannot be negative!",HttpStatus.BAD_REQUEST);
+        }
+
+        if(request.getCar().getMileage() < 0){
+            logger.warn(MessageFormat.format("SRAd-invalid:mileage less than 0;UserID:{0}", cp.getUserID()));
+            response.setIdAd(0);
+            return response;
+           //return new ResponseEntity<>("Mileage must be greater or equal to 0",HttpStatus.BAD_REQUEST);
+        }
+
+        if(request.getCar().getChildrenSeats() < 0){
+            logger.warn(MessageFormat.format("SRAd-invalid:seats less than 0;UserID:{0}", cp.getUserID()));
+            response.setIdAd(0);
+            return response;
+            //return new ResponseEntity<>("Number of seats must be greater or equal to 0",HttpStatus.BAD_REQUEST);
+        }
+
+        if(request.getCar().getChildrenSeats() > 4){
+            logger.warn(MessageFormat.format("SRAd-invalid:seats greater than 4;UserID:{0}", cp.getUserID()));
+            response.setIdAd(0);
+            return response;
+            //return new ResponseEntity<>("Number of seats must be lower than 5",HttpStatus.BAD_REQUEST);
+        }
+
+        if(request.getCar().getPhotos64().size() > 4){
+            logger.warn(MessageFormat.format("SRAd-invalid:photos greater than 4;UserID:{0}", cp.getUserID()));
+            response.setIdAd(0);
+            return response;
+           // return new ResponseEntity<>("You cant ad more than 4 photos!",HttpStatus.BAD_REQUEST);
+        }
+
+
+
+
+
+
+        System.out.println("0");
+        AdDTO newAdDTO = new AdDTO();
 
         newAdDTO.setOwnerId(request.getOwnerId());
         newAdDTO.setStartDate(startDate);
@@ -119,6 +190,8 @@ public class AdEndPont {
         response.setIdAd(postedAd.getId());
         response.setIdCar(postedAd.getCar().getId());
         response.setIdPriceList(postedAd.getPriceList().getId());
+
+        logger.info("SR-add ad;UserID:" + cp.getUserID()); //SR=saop request
 
         System.out.println("zavrsio request");
         return response;

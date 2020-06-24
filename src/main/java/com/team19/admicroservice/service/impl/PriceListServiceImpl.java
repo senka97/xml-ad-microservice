@@ -13,6 +13,8 @@ import com.team19.admicroservice.repository.AdRepository;
 import com.team19.admicroservice.repository.PriceListRepository;
 import com.team19.admicroservice.security.CustomPrincipal;
 import com.team19.admicroservice.service.PriceListService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +34,8 @@ public class PriceListServiceImpl implements PriceListService {
     private PriceListRepository priceListRepository;
     @Autowired
     private AdServiceImpl adService;
+
+    Logger logger = LoggerFactory.getLogger(PriceListServiceImpl.class);
 
     @Override
     public ArrayList<PriceListDTO> getPriceListsFromUser() {
@@ -49,7 +54,17 @@ public class PriceListServiceImpl implements PriceListService {
 
     @Override
     public PriceList findById(Long id) {
-        return priceListRepository.findById(id).orElse(null);
+        PriceList priceList = priceListRepository.findById(id).orElse(null);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomPrincipal cp = (CustomPrincipal) auth.getPrincipal();
+        if(priceList==null){
+            logger.warn(MessageFormat.format("PL:invalid-FBI NF;UserID:{0}", cp.getUserID()));//PL price list, FBI - find by id lol , NAF -Not found
+        }else{
+            logger.info(MessageFormat.format("PL-Id:{0}-FBI;UserID:{1}",priceList.getId(), cp.getUserID()));//PL price list, FBI - find by id lol
+        }
+
+
+        return priceList;
     }
 
     @Override
@@ -84,6 +99,8 @@ public class PriceListServiceImpl implements PriceListService {
     @Override
     public PriceListAdDTO getPriceListForAd(Long id) {
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomPrincipal cp = (CustomPrincipal) auth.getPrincipal();
         Ad ad = adService.findById(id);
 
         if(ad != null)
@@ -96,8 +113,11 @@ public class PriceListServiceImpl implements PriceListService {
             pl.setAdID(ad.getId());
             pl.setPriceForCdw(ad.getPriceList().getPriceForCdw());
             pl.setCdwAd(ad.getCdw());
+            logger.info(MessageFormat.format("PL-Id:{0}-RFA;UserID:{1}",ad.getPriceList().getId(), cp.getUserID()));//PL price list, RFA -Read From Ad
+
             return pl;
         }
+        logger.warn(MessageFormat.format("PL-invalid:NAF-Id:{0};UserID:{1}",id, cp.getUserID()));//PL price list, NAF -No ad found
         return null;
     }
 

@@ -6,7 +6,9 @@ import com.team19.admicroservice.repository.UserCanRateRepository;
 import com.team19.admicroservice.service.UserCanRateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import java.text.MessageFormat;
 import java.time.LocalDate;
 
 @Service
@@ -18,6 +20,9 @@ public class UserCanRateServiceImpl implements UserCanRateService {
     @Autowired
     private AdServiceImpl adService;
 
+    Logger logger = LoggerFactory.getLogger(UserCanRateServiceImpl.class);
+    //UCR user can rate
+
     @Override
     public boolean canRate(Long userId, Long adId) {
         Ad ad = adService.findById(adId);
@@ -27,12 +32,15 @@ public class UserCanRateServiceImpl implements UserCanRateService {
             UserCanRate userCanRate = userCanRateRepository.findUserCanRate(ad.getCarId(), userId, false, today);
 
             if(userCanRate == null) {
+                logger.warn(MessageFormat.format("UCR-not found;AdID:{0};UserID:{1}", adId, userId));
                 return false;
             } else {
+                logger.info(MessageFormat.format("UCR;AdID:{0};UserID:{1}", adId, userId));
                 return true;
             }
 
         } else {
+            logger.error(MessageFormat.format("UCR;AdID:{0}-not found;UserID:{1}", adId, userId));
             return false;
         }
     }
@@ -45,9 +53,11 @@ public class UserCanRateServiceImpl implements UserCanRateService {
         if(userCanRate != null) {
             userCanRate.setRated(true);
             userCanRateRepository.save(userCanRate);
+            logger.info(MessageFormat.format("UCR-change;CarID:{0};UserID:{1}", carId, userId));
             return true;
 
         } else {
+            logger.warn(MessageFormat.format("UCR-change-not found;CarID:{0};UserID:{1}", carId, userId));
             return false;
         }
     }
@@ -63,9 +73,11 @@ public class UserCanRateServiceImpl implements UserCanRateService {
             userCanRate.setRated(false);
             userCanRate.setRequestEndDate(requestEndDate);
             userCanRateRepository.save(userCanRate);
+            logger.info(MessageFormat.format("UCR-create;AdID:{0};For userID:{1}", adId, userId));
             return true;
 
         } else {
+            logger.info(MessageFormat.format("UCR-create;AdID:{0}-not found;For userID:{1}", adId, userId));
             return false;
         }
     }

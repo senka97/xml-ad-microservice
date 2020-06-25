@@ -1,7 +1,8 @@
 package com.team19.admicroservice.controller;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.team19.admicroservice.service.impl.UserCanPostCommentServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,9 @@ public class UserCanPostCommentController {
     @Autowired
     private UserCanPostCommentServiceImpl userCanPostCommentService;
 
-    @GetMapping(value= "/canPost/{adId}/{userId}")
+    Logger logger = LoggerFactory.getLogger(UserCanPostCommentController.class);
+
+    @GetMapping(value= "/userCanPostComment/{adId}/{userId}")
     @PreAuthorize("hasAuthority('comment_create')")
     public ResponseEntity<?> canUserPostComment(@PathVariable("adId") Long adId, @PathVariable("userId") Long userId)
     {
@@ -36,7 +39,17 @@ public class UserCanPostCommentController {
    // @PreAuthorize("hasAuthority('comment_create')") agent kada prihvata zahtev nece imati ovu permisiju, a tada se poziva ova funkcija
     public Boolean createUserCanPostComment(@PathVariable("adId") Long adId, @PathVariable("uId") Long userId, @PathVariable("endDate") String endDate)
     {
-        LocalDate requestEndDate = LocalDate.parse(endDate);
-        return this.userCanPostCommentService.createUserCanPostComment(adId,userId,requestEndDate);
+        try
+        {
+            LocalDate requestEndDate = LocalDate.parse(endDate);
+            return this.userCanPostCommentService.createUserCanPostComment(adId,userId,requestEndDate);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            logger.error("Creating UCPC - Invalid date format");
+            return false;
+        }
+
     }
 }

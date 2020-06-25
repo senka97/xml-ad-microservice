@@ -96,8 +96,6 @@ public class AdServiceImpl implements AdService {
     public AdDTO getAd(Long id){
 
         Ad ad = adRepository.findById(id).orElse(null);
-        //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        //CustomPrincipal cp = (CustomPrincipal) auth.getPrincipal();
 
         if(ad != null)
         {
@@ -105,30 +103,42 @@ public class AdServiceImpl implements AdService {
 
             CarDTO carDTO = this.carClient.getCar(ad.getCarId());
             System.out.println("Vratio se iz car service");
-            newAd.setCar(carDTO);
+            if( carDTO != null)
+            {
+                newAd.setCar(carDTO);
 
-            PriceList priceList = ad.getPriceList();
-            PriceListDTO priceListDTO = new PriceListDTO();
+                PriceList priceList = ad.getPriceList();
+                PriceListDTO priceListDTO = new PriceListDTO();
 
-            priceListDTO.setId(priceList.getId());
-            priceListDTO.setAlias(priceList.getAlias());
-            priceListDTO.setPricePerDay(priceList.getPricePerDay());
-            priceListDTO.setPricePerKm(priceList.getPricePerKm());
-            priceListDTO.setDiscount20Days(priceList.getDiscount20Days());
-            priceListDTO.setDiscount30Days(priceList.getDiscount30Days());
-            newAd.setPriceList(priceListDTO);
+                priceListDTO.setId(priceList.getId());
+                priceListDTO.setAlias(priceList.getAlias());
+                priceListDTO.setPricePerDay(priceList.getPricePerDay());
+                priceListDTO.setPricePerKm(priceList.getPricePerKm());
+                priceListDTO.setDiscount20Days(priceList.getDiscount20Days());
+                priceListDTO.setDiscount30Days(priceList.getDiscount30Days());
+                newAd.setPriceList(priceListDTO);
 
-            newAd.setId(ad.getId());
-            newAd.setOwnerId(ad.getOwnerId());
-            newAd.setStartDate(ad.getStartDate());
-            newAd.setEndDate(ad.getEndDate());
-            newAd.setLimitKm(ad.getLimitKm());
-            newAd.setCdw(ad.getCdw());
-            newAd.setLocation(ad.getLocation());
+                newAd.setId(ad.getId());
+                newAd.setOwnerId(ad.getOwnerId());
+                newAd.setStartDate(ad.getStartDate());
+                newAd.setEndDate(ad.getEndDate());
+                newAd.setLimitKm(ad.getLimitKm());
+                newAd.setCdw(ad.getCdw());
+                newAd.setLocation(ad.getLocation());
 
-            return newAd;
+                return newAd;
+            }
+            else
+            {
+                logger.error("Getting ad - CarId: " +  ad.getCarId() + " not found");
+                return null;
+            }
         }
-        else return null;
+        else
+        {
+            logger.error("Getting ad - AdId: " +  id + " not found");
+            return null;
+        }
 
     }
 
@@ -255,8 +265,11 @@ public class AdServiceImpl implements AdService {
 
             return adDTO;
         }
-
-        else return null;
+        else
+        {
+            logger.error("Find ad - AdId: " + id + " not found");
+            return null;
+        }
     }
 
     @Override
@@ -405,7 +418,11 @@ public class AdServiceImpl implements AdService {
             }
             else return false;
         }
-        else return false;
+        else
+        {
+            logger.error("Change mileage - adId: " + adId + " not found");
+            return false;
+        }
 
     }
 }

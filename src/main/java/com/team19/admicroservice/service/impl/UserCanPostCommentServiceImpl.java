@@ -6,12 +6,13 @@ import com.team19.admicroservice.model.UserCanPostComment;
 import com.team19.admicroservice.repository.UserCanPostCommentRepository;
 import com.team19.admicroservice.security.CustomPrincipal;
 import com.team19.admicroservice.service.UserCanPostCommentService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import javax.jws.soap.SOAPBinding;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -27,28 +28,46 @@ public class UserCanPostCommentServiceImpl implements UserCanPostCommentService 
     @Autowired
     private UserClient userClient;
 
+    Logger logger = LoggerFactory.getLogger(UserCanPostCommentServiceImpl.class);
+    //UCPC - UserCanPostComment
+
     @Override
     public Boolean canUserPostComment(Long adId, Long userId) {
 
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        CustomPrincipal cp = (CustomPrincipal) auth.getPrincipal();
+       // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+       // CustomPrincipal cp = (CustomPrincipal) auth.getPrincipal();
 
         Ad ad = adService.findById(adId);
 
-        //if(ad != null && userClient.checkClientCanComment(userId, cp.getPermissions(), cp.getUserID(), cp.getToken()))
-        if(ad != null)
-        {
-            LocalDate today = LocalDate.now();
-            ArrayList<UserCanPostComment> list = this.userCanPostCommentRepository.findOut(ad.getCarId(), userId, false, today);
-            // moci ce da okaci komentar samo ako ga nije vec okacio i ako je iznajmljivanje zavrseno (endDate zahteva manji od danas)
-            if(list.isEmpty())
+        //if(userClient.checkClientCanComment(userId, cp.getPermissions(), cp.getUserID(), cp.getToken()))
+       // {
+            if (ad != null)
             {
+                LocalDate today = LocalDate.now();
+                ArrayList<UserCanPostComment> list = this.userCanPostCommentRepository.findOut(ad.getCarId(), userId, false, today);
+                // moci ce da okaci komentar samo ako ga nije vec okacio i ako je iznajmljivanje zavrseno (endDate zahteva manji od danas)
+                if (list.isEmpty())
+                {
+                    logger.info("UCPC - UserId: " + userId + " can't post comment adId: "+ adId);
+                    return false;
+                }
+                else
+                {
+                    logger.info("UCPC - UserId: " + userId + " can post comment adId: " + adId);
+                    return true;
+                }
+            }
+            else
+            {
+                logger.error("UCPC - AdId: " + adId + " not found");
                 return false;
             }
-            else return true;
-        }
-        else return false;
-
+      /*  }
+        else
+        {
+            logger.info("UCPC - User id: " + userId + " blocked for posting comments");
+            return false;
+        }*/
     }
 
     @Override
@@ -62,9 +81,14 @@ public class UserCanPostCommentServiceImpl implements UserCanPostCommentService 
             UserCanPostComment ucpc = list.get(0);
             ucpc.setPosted(true);
             this.userCanPostCommentRepository.save(ucpc);
+            logger.info("Changing UCPC - UserId: " + userId + " posted comment on carId: " + carId);
             return true;
         }
-        else return false;
+        else
+        {
+            logger.warn("Changing UCPC - UserId: " + userId + " couldn't comment on carId: " + carId);
+            return false;
+        }
 
     }
 
@@ -83,9 +107,14 @@ public class UserCanPostCommentServiceImpl implements UserCanPostCommentService 
             ucpc.setPosted(false);
 
             this.userCanPostCommentRepository.save(ucpc);
+            logger.info("Creating UCPC - Created for userId: " + userId + " and adId: " + adId);
             return true;
         }
-        else return false;
+        else
+        {
+            logger.error("Creating UCPC - AdId: " + adId + " not found");
+            return false;
+        }
 
     }
 }

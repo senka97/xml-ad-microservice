@@ -1,11 +1,13 @@
 package com.team19.admicroservice.soap;
 
-import com.rent_a_car.ad_service.soap.AddPriceListRequest;
-import com.rent_a_car.ad_service.soap.AddPriceListResponse;
-import com.rent_a_car.ad_service.soap.DeletePriceListRequest;
-import com.rent_a_car.ad_service.soap.DeletePriceListResponse;
+import com.rent_a_car.ad_service.soap.*;
+import com.team19.admicroservice.security.CustomPrincipal;
 import com.team19.admicroservice.service.impl.PriceListServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
@@ -19,9 +21,15 @@ public class PriceListEndpoint {
     @Autowired
     private PriceListServiceImpl priceListService;
 
+    Logger logger = LoggerFactory.getLogger(PriceListEndpoint.class);
+
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "addPriceListRequest")
     @ResponsePayload
     public AddPriceListResponse addPriceList(@RequestPayload AddPriceListRequest apr){
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomPrincipal cp = (CustomPrincipal) auth.getPrincipal();
+        logger.info("SR-add PL;UserID:" + cp.getUserID()); //SR=saop request
 
         String msg = "";
         boolean valid = true;
@@ -43,6 +51,7 @@ public class PriceListEndpoint {
             valid = false;
         }
         if(!valid){
+            logger.warn("SR-add PL failed:DNV;UserID:" + cp.getUserID()); //SR=saop request, DNV=data not valid
             AddPriceListResponse apResponse = new AddPriceListResponse();
             apResponse.setMessage(msg);
             apResponse.setSuccess(false);
@@ -58,7 +67,12 @@ public class PriceListEndpoint {
     @ResponsePayload
     public DeletePriceListResponse deletePriceList(@RequestPayload DeletePriceListRequest dpr){
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomPrincipal cp = (CustomPrincipal) auth.getPrincipal();
+        logger.info("SR-delete PL;UserID:" + cp.getUserID()); //SR=saop request
+
         if(dpr.getMainId()<=0){
+            logger.warn("SR-delete PL failed:IDNV;UserID:" + cp.getUserID()); //SR=saop request, IDNV=id not valid
             DeletePriceListResponse dpResponse = new DeletePriceListResponse();
             dpResponse.setMessage("Id is invalid. It has to be positive long number.");
             dpResponse.setSuccess(false);

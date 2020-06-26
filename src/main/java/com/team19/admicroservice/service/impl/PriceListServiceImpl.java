@@ -129,21 +129,27 @@ public class PriceListServiceImpl implements PriceListService {
         PriceList priceList = new PriceList(priceListRequestDTO, Long.parseLong(cp.getUserID()));
         priceList = this.priceListRepository.save(priceList);
         PriceListDTO priceListDTO = new PriceListDTO(priceList);
+        logger.info(MessageFormat.format("PL-ID:{0}-created;UserID:{1}", priceListDTO.getId(), cp.getUserID())); //PL=price list
         return priceListDTO;
     }
 
     @Override
     public boolean deletePriceList(Long id) {
 
+         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+         CustomPrincipal cp = (CustomPrincipal) auth.getPrincipal();
+
          PriceList priceList = this.findById(id);
          List<Ad> activeAds = this.adService.findActiveAdsForThisPriceList(id, LocalDate.now());
          if(activeAds.size()>0){
+             logger.info(MessageFormat.format("PL-ID:{0} DF-Ads exists;UserID:{1}", id, cp.getUserID())); //DF=delete failed
              return false;
          }
 
          priceList.setRemoved(true);
          this.priceListRepository.save(priceList);
-         return true;
+         logger.info(MessageFormat.format("PL-ID:{0}-deleted;UserID:{1}", id, cp.getUserID()));
+        return true;
 
     }
 
@@ -158,6 +164,7 @@ public class PriceListServiceImpl implements PriceListService {
             apResponse.setSuccess(false);
             apResponse.setMessage("You already have a price list with that alias.");
             apResponse.setMainId(0);
+            logger.info(MessageFormat.format("PLR-failed FA: alias {0} AE;UserID:{1}", addPriceListRequest.getAlias(), cp.getUserID())); //PLR=price list request, AE=already exists, FA=from agent app
             return apResponse;
         }
         PriceList priceList = new PriceList(addPriceListRequest, Long.parseLong(cp.getUserID()));
@@ -166,6 +173,7 @@ public class PriceListServiceImpl implements PriceListService {
         apResponse.setMainId(priceList.getId());
         apResponse.setSuccess(true);
         apResponse.setMessage("Success");
+        logger.info(MessageFormat.format("PL-ID:{0}-created FA;UserID:{1}", priceList.getId(), cp.getUserID())); //FA=from agentApp
 
         return apResponse;
     }
@@ -173,11 +181,15 @@ public class PriceListServiceImpl implements PriceListService {
     @Override
     public DeletePriceListResponse deletePriceListFromAgentApp(DeletePriceListRequest deletePriceListRequest) {
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomPrincipal cp = (CustomPrincipal) auth.getPrincipal();
+
         PriceList priceList = this.findById(deletePriceListRequest.getMainId());
         if(priceList == null){
             DeletePriceListResponse dpResponse = new DeletePriceListResponse();
             dpResponse.setSuccess(false);
             dpResponse.setMessage("Price list with that id doesn't exist in the main app.");
+            logger.warn(MessageFormat.format("PL-ID:{0} NF-FA;UserID:{1}", deletePriceListRequest.getMainId(), cp.getUserID())); //NF=not found, FA=from agentApp
             return dpResponse;
         }
         List<Ad> activeAds = this.adService.findActiveAdsForThisPriceList(deletePriceListRequest.getMainId(), LocalDate.now());
@@ -185,6 +197,7 @@ public class PriceListServiceImpl implements PriceListService {
             DeletePriceListResponse dpResponse = new DeletePriceListResponse();
             dpResponse.setSuccess(false);
             dpResponse.setMessage("This price list can't be deleted because there are active ads which use it.");
+            logger.info(MessageFormat.format("PL-ID:{0} DF-FA-Ads exists;UserID:{1}", deletePriceListRequest.getMainId(), cp.getUserID())); //DF=delete failed, FA=from agentApp
             return dpResponse;
         }
 
@@ -193,6 +206,7 @@ public class PriceListServiceImpl implements PriceListService {
         DeletePriceListResponse dpResponse = new DeletePriceListResponse();
         dpResponse.setSuccess(true);
         dpResponse.setMessage("Success.");
+        logger.info(MessageFormat.format("PL-ID:{0}-deleted FA;UserID:{1}", deletePriceListRequest.getMainId(), cp.getUserID())); //FA=from agentApp
         return dpResponse;
 
     }

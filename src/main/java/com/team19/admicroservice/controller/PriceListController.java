@@ -1,8 +1,10 @@
 package com.team19.admicroservice.controller;
 
+import com.team19.admicroservice.client.UserClient;
 import com.team19.admicroservice.dto.PriceListAdDTO;
 import com.team19.admicroservice.dto.PriceListDTO;
 import com.team19.admicroservice.dto.PriceListRequestDTO;
+import com.team19.admicroservice.dto.UserInfoDTO;
 import com.team19.admicroservice.model.PriceList;
 import com.team19.admicroservice.security.CustomPrincipal;
 import com.team19.admicroservice.service.impl.PriceListServiceImpl;
@@ -26,6 +28,8 @@ public class PriceListController {
 
     @Autowired
     private PriceListServiceImpl priceListService;
+    @Autowired
+    private UserClient userClient;
 
     Logger logger = LoggerFactory.getLogger(PriceListController.class);
 
@@ -63,6 +67,13 @@ public class PriceListController {
           if(priceListRequestDTO.getDiscount30Days()<0 || priceListRequestDTO.getDiscount20Days()<0){
               logger.warn("PLR-invalid:discount INV;UserID:" + cp.getUserID()); //PLR=price list request, INV=invalid
               return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Discount has to be positive integer.");
+          }else{
+              UserInfoDTO userInfo = this.userClient.getUserInfo(Long.parseLong(cp.getUserID()), cp.getToken());
+              if(userInfo.getRole().equals("ROLE_CLIENT")){
+                  logger.warn("PLR-invalid:discount INV;UserID:" + cp.getUserID()); //PLR=price list request, INV=invalid
+                  return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Clients can't define discount for their ads.");
+
+              }
           }
 
           PriceList exist = this.priceListService.findByAliasForOwner(priceListRequestDTO.getAlias());

@@ -34,13 +34,13 @@ public class UserCanPostCommentServiceImpl implements UserCanPostCommentService 
     @Override
     public Boolean canUserPostComment(Long adId, Long userId) {
 
-       // Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-       // CustomPrincipal cp = (CustomPrincipal) auth.getPrincipal();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomPrincipal cp = (CustomPrincipal) auth.getPrincipal();
 
         Ad ad = adService.findById(adId);
 
-        //if(userClient.checkClientCanComment(userId, cp.getPermissions(), cp.getUserID(), cp.getToken()))
-       // {
+        if(userClient.checkClientCanComment(userId, cp.getPermissions(), cp.getUserID(), cp.getToken()))
+        {
             if (ad != null)
             {
                 LocalDate today = LocalDate.now();
@@ -62,12 +62,12 @@ public class UserCanPostCommentServiceImpl implements UserCanPostCommentService 
                 logger.error("UCPC - AdId: " + adId + " not found");
                 return false;
             }
-      /*  }
+        }
         else
         {
             logger.info("UCPC - User id: " + userId + " blocked for posting comments");
             return false;
-        }*/
+        }
     }
 
     @Override

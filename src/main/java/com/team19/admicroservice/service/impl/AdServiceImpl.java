@@ -405,8 +405,6 @@ public class AdServiceImpl implements AdService {
 
         Ad ad = adRepository.findById(adId).orElse(null);
 
-        // TODO proveriti da li je oglas unlimited ili ne, pa ako je prekoracio kilometre da se dodatno naplati
-
         if(ad != null)
         {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -424,5 +422,21 @@ public class AdServiceImpl implements AdService {
             return false;
         }
 
+    }
+
+    @Override
+    public Integer getLimitKm(Long adId) {
+
+        Ad ad = adRepository.findById(adId).orElse(null);
+
+        if(ad != null)
+        {
+            return ad.getLimitKm();
+        }
+        else
+        {
+            logger.error("Get LimitKm-adId: " + adId + " not found");
+            return null;
+        }
     }
 }

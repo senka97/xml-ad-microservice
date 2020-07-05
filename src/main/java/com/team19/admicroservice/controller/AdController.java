@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -161,6 +162,13 @@ public class AdController {
     public Boolean changeMileageAfterReport(@PathVariable("id") Long adId, @RequestBody double mileage)
     {
         return this.adService.changeMileageAfterReport(adId,mileage);
+    }
+
+    @GetMapping(value = "/ad/{id}/limitKm")
+    @PreAuthorize("hasAuthority('report_create')")
+    public Integer getLimitKm(@PathVariable("id") Long adId)
+    {
+        return this.adService.getLimitKm(adId);
     }
 
     @GetMapping(value="/ad/{from_date}/{to_date}/{location}", produces = "application/json")

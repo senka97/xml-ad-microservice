@@ -14,6 +14,8 @@ public class CarDTO {
 
     private boolean hasAndroidApp;
 
+    private String androidToken;
+
     private String carBrand;
 
     private String carModel;
@@ -121,5 +123,13 @@ public class CarDTO {
 
     public boolean isHasAndroidApp() {
         return hasAndroidApp;
+    }
+
+    public String getAndroidToken() {
+        return androidToken;
+    }
+
+    public void setAndroidToken(String androidToken) {
+        this.androidToken = androidToken;
     }
 }

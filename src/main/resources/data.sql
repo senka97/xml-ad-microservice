@@ -15,7 +15,9 @@ insert into user_can_post_comment ( user_id, car_id, posted, request_end_date) v
 insert into user_can_post_comment ( user_id, car_id, posted, request_end_date) value ( 3, 5, false, '2020-06-30');
 insert into user_can_post_comment ( user_id, car_id, posted, request_end_date) value ( 5, 1, false, '2020-06-20');
 insert into user_can_post_comment ( user_id, car_id, posted, request_end_date) value ( 5, 2, false, '2020-06-06');
+insert into user_can_post_comment ( user_id, car_id, posted, request_end_date) value ( 8, 1, false, '2020-06-06');
 
 insert into user_can_rate (user_id, car_id, rated, request_end_date) value (3, 1, false, '2020-06-05');
+insert into user_can_rate (user_id, car_id, rated, request_end_date) value (8, 1, false, '2020-06-06');
 
 

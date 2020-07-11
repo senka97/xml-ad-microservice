@@ -197,7 +197,7 @@ public class AdServiceImpl implements AdService {
         carDTO.setId(newAd.getCarId());
         PriceListDTO plDTO = new PriceListDTO();
         plDTO.setId(newAd.getPriceList().getId());
-        adDTO.setCar(carDTO);
+        adDTO.setCar(car);
         adDTO.setPriceList(plDTO);
 
         return adDTO;

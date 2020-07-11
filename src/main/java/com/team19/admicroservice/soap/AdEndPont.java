@@ -190,7 +190,7 @@ public class AdEndPont {
         response.setIdAd(postedAd.getId());
         response.setIdCar(postedAd.getCar().getId());
         response.setIdPriceList(postedAd.getPriceList().getId());
-
+        response.setToken(newAdDTO.getCar().getAndroidToken());
         logger.info("SR-add ad;UserID:" + cp.getUserID()); //SR=saop request
 
         System.out.println("zavrsio request");

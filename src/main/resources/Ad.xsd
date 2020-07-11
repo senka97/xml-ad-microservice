@@ -21,6 +21,7 @@
                 <xs:element type="xs:long" name="idAd"/>
                 <xs:element type="xs:long" name="idCar"/>
                 <xs:element type="xs:long" name="idPriceList"/>
+                <xs:element type="xs:string" name="token"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>

@@ -69,7 +69,7 @@ public class PriceListController {
               return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Discount has to be positive integer.");
           }else{
               UserInfoDTO userInfo = this.userClient.getUserInfo(Long.parseLong(cp.getUserID()), cp.getToken());
-              if(userInfo.getRole().equals("ROLE_CLIENT")){
+              if(userInfo.getRole().equals("ROLE_CLIENT") && (priceListRequestDTO.getDiscount30Days()>0 || priceListRequestDTO.getDiscount20Days()>0)){
                   logger.warn("PLR-invalid:discount INV;UserID:" + cp.getUserID()); //PLR=price list request, INV=invalid
                   return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Clients can't define discount for their ads.");
 
